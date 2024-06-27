@@ -1,3 +1,91 @@
+<?php
+// Include database connection
+include_once "db_connect.php";
+
+// Initialize session
+session_start();
+
+// Check if user is already logged in, redirect to index.php if true
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header('Location: index.php');
+    exit;
+}
+
+$email = $password = "";
+$email_err = $password_err = "";
+
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate and sanitize input
+    $email = trim($_POST["email"]);
+    $password = trim($_POST["password"]);
+
+    // Check if email is empty
+    if (empty($email)) {
+        $email_err = "Please enter email.";
+    }
+
+    // Check if password is empty
+    if (empty($password)) {
+        $password_err = "Please enter your password.";
+    }
+
+    // If no errors, proceed with authentication
+    if (empty($email_err) && empty($password_err)) {
+        // Prepare SQL statement
+        $sql = "SELECT id, FirstName, LastName, Password FROM customer WHERE Email = ?";
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("s", $param_email);
+            $param_email = $email;
+
+            // Attempt to execute the prepared statement
+            if ($stmt->execute()) {
+                $stmt->store_result();
+
+                // Check if email exists
+                if ($stmt->num_rows == 1) {
+                    // Bind result variables
+                    $stmt->bind_result($id, $FirstName, $LastName, $hashed_password);
+                    if ($stmt->fetch()) {
+                        // Verify password
+                        if (password_verify($password, $hashed_password)) {
+                            // Password is correct, start a new session
+                            session_start();
+
+                            // Store data in session variables
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["id"] = $id;
+                            $_SESSION["FirstName"] = $FirstName;
+                            $_SESSION["LastName"] = $LastName;
+
+                            // Redirect user to index page
+                            header("location: index.php");
+                            exit;
+                        } else {
+                            // Display an error message if password is incorrect
+                            $password_err = "The password you entered was not valid.";
+                        }
+                    }
+                } else {
+                    // Display an error message if email doesn't exist
+                    $email_err = "No account found with that email.";
+                }
+            } else {
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+
+            // Close statement
+            $stmt->close();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    }
+
+    // Close connection
+    $conn->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,6 +162,10 @@
             color: #4CAF50;
             text-decoration: none;
         }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -82,95 +174,6 @@
     <div class="header">
         <h1>Log In</h1>
     </div>
-
-    <?php
-    session_start();
-
-    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-        header('Location: index.php');
-        exit;
-    }
-
-    $email = $password = "";
-    $email_err = $password_err = "";
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Validate and sanitize input
-        $email = trim($_POST["email"]);
-        $password = trim($_POST["password"]);
-
-        // Check if email and password are empty
-        if (empty($email)) {
-            $email_err = "Please enter email.";
-        }
-
-        if (empty($password)) {
-            $password_err = "Please enter your password.";
-        }
-
-        // If no errors, verify credentials
-        if (empty($email_err) && empty($password_err)) {
-            $servername = "localhost";
-            $username = "root";
-            $db_password = "";
-            $dbname = "SSDDB";
-
-            // Create connection
-            $conn = new mysqli($servername, $username, $db_password, $dbname);
-
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-
-            // Prepare SQL statement
-            $sql = "SELECT id, FirstName, LastName, Password FROM customer WHERE Email = ?";
-            if ($stmt = $conn->prepare($sql)) {
-                $stmt->bind_param("s", $param_email);
-                $param_email = $email;
-
-                // Attempt to execute the prepared statement
-                if ($stmt->execute()) {
-                    $stmt->store_result();
-
-                    // Check if email exists, if yes then verify password
-                    if ($stmt->num_rows == 1) {
-                        $stmt->bind_result($id, $FirstName, $LastName, $hashed_password);
-                        if ($stmt->fetch()) {
-                            if (password_verify($password, $hashed_password)) {
-                                // Password is correct, start a new session
-                                session_start();
-
-                                // Store data in session variables
-                                $_SESSION["loggedin"] = true;
-                                $_SESSION["id"] = $id;
-                                $_SESSION["FirstName"] = $FirstName;
-                                $_SESSION["LastName"] = $LastName;
-
-                                // Redirect user to index page
-                                header("location: index.php");
-                            } else {
-                                // Display an error message if password is not valid
-                                $password_err = "The password you entered was not valid.";
-                            }
-                        }
-                    } else {
-                        // Display an error message if email doesn't exist
-                        $email_err = "No account found with that email.";
-                    }
-                } else {
-                    echo "Oops! Something went wrong. Please try again later.";
-                }
-
-                // Close statement
-                $stmt->close();
-            }
-
-            // Close connection
-            $conn->close();
-        }
-    }
-    ?>
 
     <form id="login-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
         <div class="form-group">

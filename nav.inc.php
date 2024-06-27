@@ -1,12 +1,15 @@
 <?php
-// Start output buffering as early as possible
-ob_start();
-
-// Now session_start() can be safely called
+// Start session at the beginning of the script
 session_start();
 
 // Check if user is logged in
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+
+// Redirect to login if not logged in
+if (!$logged_in) {
+    header("Location: login.php");
+    exit;
+}
 
 // Handle logout request
 if (isset($_POST['logout'])) {
@@ -16,7 +19,7 @@ if (isset($_POST['logout'])) {
     // Destroy the session
     session_destroy();
 
-    // Redirect to login page
+    // Redirect to login page after logout
     header("Location: login.php");
     exit;
 }
@@ -48,16 +51,17 @@ if (isset($_POST['logout'])) {
             </div>
             <div class="navbar-nav ml-auto">
                 <?php if ($logged_in): ?>
-                    <form class="form-inline my-2 my-lg-0" method="post">
+                    <a href="profilepage.php" class="nav-link">
+                        <i class="fa fa-user-circle mr-1"></i> Profile
+                    </a>
+                    <form class="form-inline my-2 my-lg-0 ml-3" method="post">
                         <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" name="logout">Logout</button>
                     </form>
+                <?php else: ?>
+                    <a href="signup.php" class="nav-link">Sign Up</a>
+                    <a href="login.php" class="nav-link">Login</a>
                 <?php endif; ?>
             </div>
         </div>
     </nav>
 </div>
-
-<?php
-// Optionally, you can flush the output buffer here
-ob_end_flush();
-?>

@@ -167,7 +167,7 @@
                     $petName = $conn->real_escape_string($_POST['pet-name-' . $i]);
                     $petAge = (int)$_POST['pet-age-' . $i];
                     $petBreed = $conn->real_escape_string($_POST['pet-breed-' . $i]);
-                    $petWeight = (float)$_POST['pet-weight-' . $i];
+                    $petWeight = $conn->real_escape_string($_POST['pet-weight-' . $i]);
                     $petCoatType = $conn->real_escape_string($_POST['pet-coat-' . $i]);
                     $petGender = $conn->real_escape_string($_POST['pet-gender-' . $i]);
                     $petBehaviour = $conn->real_escape_string($_POST['pet-behaviour-' . $i]);
