@@ -3,6 +3,18 @@
 include "db_connect.php"; // Ensure this file initializes $mysqli correctly
 
 
+// Check for password change success message
+if (isset($_SESSION['password_change_success']) && $_SESSION['password_change_success']) {
+    echo "<div class='alert alert-success' role='alert'>Password changed successfully!</div>";
+    unset($_SESSION['password_change_success']);
+}
+
+// Check for password change error message
+if (isset($_SESSION['password_change_error'])) {
+    echo "<div class='alert alert-danger' role='alert'>" . $_SESSION['password_change_error'] . "</div>";
+    unset($_SESSION['password_change_error']);
+}
+
 
 // Function to sanitize and validate input
 function sanitizeInput($input)
@@ -56,11 +68,13 @@ function validateAge($age)
 
                 <!-- Change Password Form -->
                 <div class="d-inline-block mb-4">
-                    <form action="changepassword.php" method="post">
-                        <button type="submit" class="btn btn-primary">Change Password</button>
-                    </form>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
                 </div>
                 <hr>
+                
+                
+                
+                
 
                 <h2 class="mt-4 mb-4">Pets Info</h2>
                 <!-- Add Pet Button -->
@@ -89,14 +103,7 @@ function validateAge($age)
                     echo "</div>";
                     echo "</div>";
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                   
                     
                      // Add Pet Modal
                     echo "<div class='modal fade' id='addPetModal' tabindex='-1' role='dialog' aria-labelledby='addPetModalLabel' aria-hidden='true'>";
@@ -249,6 +256,42 @@ function validateAge($age)
     </div>
     <!-- Profile Content End -->
 
+     <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="changepassword.php" method="post" id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            <small class="text-danger" id="passwordMatchError"></small>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="validateChangePasswordForm()">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Change Password Modal End -->
+    
+    
+    
+    
     <!-- Footer Start -->
     <?php include "footer.inc.php"; ?>
     <!-- Footer End -->
@@ -272,7 +315,20 @@ function validateAge($age)
 
     <!-- Custom JavaScript -->
     <script>
-        // Client-side validation for pet age as integer
+    function validateChangePasswordForm() {
+            var newPassword = document.getElementById('newPassword').value.trim();
+            var confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            // Check if new password matches confirm password
+            if (newPassword !== confirmPassword) {
+                document.getElementById('passwordMatchError').textContent = 'Passwords do not match.';
+                return false;
+            } else {
+                document.getElementById('changePasswordForm').submit(); // Submit form if validation passes
+            }
+        }    
+    
+    // Client-side validation for pet age as integer
         function validateEditPetForm(petID) {
             var editedAge = document.getElementById('editPetAge').value.trim();
 
