@@ -85,7 +85,7 @@ function validateAge($age)
                     echo "<p class='card-text'>Gender: " . htmlspecialchars($petGender) . "</p>";
                     echo "<p class='card-text'>Behaviour: " . htmlspecialchars($petBehaviour) . "</p>";
                     echo "<button class='btn btn-primary' data-toggle='modal' data-target='#editPetModal$petID'>Edit</button>";
-                    echo "<button class='btn btn-danger ml-2' data-toggle='modal' data-target='#deletePetModal$petID'>Delete</button>";
+                    echo "<button class='btn btn-danger ml-2' onclick='confirmDelete($petID)'>Delete</button>";
                     echo "</div>";
                     echo "</div>";
 
@@ -297,6 +297,24 @@ function validateAge($age)
                 document.getElementById('addPetForm').submit(); // Submit form if validation passes
             }
         }
+        
+        
+        function confirmDelete(petID) {
+            if (confirm("Are you sure you want to delete this pet?")) {
+                // Create an AJAX request to delete the pet
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "deletepet.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Reload the page or handle the response as needed
+                        location.reload();
+                    }
+                };
+                xhr.send("pet_id=" + petID);
+            }
+        }
+        
     </script>
 
    
