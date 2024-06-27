@@ -1,0 +1,46 @@
+body {
+    justify-content: center; /* Horizontally centers the container */
+    align-items: center;    /* Vertically centers the container */
+    height: 100vh;          /* Full height of the viewport */
+    margin: 0;
+}
+
+#booking_successful_container {
+    background: #fff;
+    padding: 80px;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 80px;
+    text-align: center;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 10px;
+    width: 50%;
+    text-align: left;
+    align-items: center;
+    justify-content: center;
+}
+
+#book_summary_btn {
+    display: flex;
+    justify-content: center;
+}
+
+#home_btn {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

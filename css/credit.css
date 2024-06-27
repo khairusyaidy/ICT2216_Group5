@@ -1,0 +1,33 @@
+#form_container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form horizontally */
+    justify-content: center; /* Center the form vertically if the container has a height */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align form elements to the left */
+}
+
+form input[type="text"],
+form input[type="number"] {
+    text-align: left; /* Ensure text inside the input fields is left-aligned */
+}
+
+.error-message {
+    color: red;
+    display: none;
+}
+
+#credit_btn {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    width: 100%; /* Make the button take full width of the parent */
+    text-align: center; /* Ensure text inside the button is centered */
+}

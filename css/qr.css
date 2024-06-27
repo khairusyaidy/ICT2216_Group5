@@ -1,0 +1,29 @@
+/*#qr_container {
+    background: #fff;
+    padding: 80px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}*/
+
+#qr_container p {
+    font-size: 39px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+img {
+    margin-top: 30px;
+    margin-left: 610px;
+    width: 300px;
+    height: auto;
+}
+
+b {
+    font-size: 25px;
+}
+
+#button_container {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    margin-top: 50px; /* Add some space above the button */
+}
