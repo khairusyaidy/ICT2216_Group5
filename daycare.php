@@ -68,44 +68,51 @@
     </div>
 </section>
 
-            <hr style="margin: 40px 0; border-top: 1px solid #ccc;">
+           <div class="container-fluid bg-light my-5 p-0 py-5">
+    <div class="container p-0 py-5">
+        <div class="d-flex flex-column text-center mb-5">
+            <h1 class="display-4 m-0">Our Customers <span class="text-primary">Says</span></h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel">
+            <?php
+            // Include the database connection file
+            include 'db_connect.php';
 
-<div class="col text-center mb-4">
-    <h2>Ratings and Reviews</h2>
-    <p>
-        We value the feedback from our clients and continually strive to improve our services. Here are some of the reviews from our happy customers:
-        <br><br>
-        <?php
-        // Include the database connection file
-        include 'db_connect.php';
-
-        // Query to fetch reviews and service names where ServiceID is 3, 4, or 5
-        $sql = "SELECT review.Rating, review.Feedback, service.ServiceName 
+            // Query to fetch reviews and service names where ServiceID is 3, 4, 5, 6, 7, 8, 9, 10, 11
+            $sql = "SELECT review.Rating, review.Feedback
                 FROM review 
                 JOIN service ON review.ServiceID = service.ID 
                 WHERE review.ServiceID = 2";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
+            $result = $conn->query($sql);
+            
+            $serviceName = "DayCare";
+            
+if ($result->num_rows > 0) {
             // Output data of each row
             while($row = $result->fetch_assoc()) {
-                // Display each review
-                $ratingStars = str_repeat('★', $row['Rating']) . str_repeat('☆', 5 - $row['Rating']);
-                echo "<div style='border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;'>
-                        <strong>{$row['ServiceName']}</strong> - {$ratingStars}
-                        <br>
-                        \"{$row['Feedback']}\"
-                      </div>";
+                    // Display each review
+                    $ratingStars = str_repeat('★', $row['Rating']) . str_repeat('☆', 5 - $row['Rating']);
+                    echo "<div class='bg-white mx-3 p-4'>
+                            <div class='mb-3'>
+                                <h5>{$serviceName}</h5>
+                                <i>{$ratingStars}</i>
+                            </div>
+                            <p class='m-0'>\"{$row['Feedback']}\"</p>
+                          </div>";
+                
             }
-        } else {
-            echo "No reviews available.";
-        }
+}
+           else {
+                echo "<p>No reviews available.</p>";
+            }
 
-        // Close the connection
-        $conn->close();
-        ?>
-    </p>
+            // Close the connection
+            $conn->close();
+            ?>
+        </div>
+    </div>
 </div>
+
     <!-- daycare Services Section End -->
 
     <!-- Footer Start -->
