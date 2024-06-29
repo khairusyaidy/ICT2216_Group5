@@ -1,0 +1,24 @@
+body {
+    justify-content: center; /* Horizontally centers the container */
+    align-items: center;    /* Vertically centers the container */
+    height: 100vh;          /* Full height of the viewport */
+    margin: 0;
+}
+
+#booking_successful_container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+#grooming_btn {
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
