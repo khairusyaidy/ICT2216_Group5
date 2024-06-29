@@ -27,7 +27,7 @@
         <div id="header-carousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="img/carousel-1.jpg" alt="Image">
+                    <img class="w-100" src="img/carousel-2.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-3" style="max-width: 900px;">
                             <h3 class="text-white mb-3 d-none d-sm-block">Best Pet Services</h3>
@@ -88,9 +88,6 @@
                     </div>
                     <div class="col-6 p-0">
                         <img class="img-fluid w-100" src="img/about-2.jpg" alt="">
-                    </div>
-                    <div class="col-6 p-0">
-                        <img class="img-fluid w-100" src="img/about-3.jpg" alt="">
                     </div>
                 </div>
             </div>
