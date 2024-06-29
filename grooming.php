@@ -175,7 +175,7 @@
                     <br> 
                     <br>
                     <p>
-                        At Fur Season Hotel, we understand that every dog is unique, and we strive to provide personalized care that meets the needs of each pet. Our grooming services are designed to ensure your dog leaves our hotel looking and feeling their best. Click "Book" below to book a grooming session for your furry friend today!
+                        At Fur Season Hotel, we understand that every dog is unique, and we strive to provide personalized care that meets the needs of each pet. Our grooming services are designed to ensure your dog leaves our hotel looking and feeling their best. Click "Book Now" below to book a grooming session for your furry friend today!
                     </p>
                     <br>
                     <button onclick="window.location.href='booking_page.html'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
