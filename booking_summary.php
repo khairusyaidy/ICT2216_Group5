@@ -128,4 +128,11 @@ $conn->close();
 
     </body>
 
+    <script>
+        document.getElementById('home_btn').addEventListener('click', function (event) {
+            window.location.href = 'index.php';
+        });
+    </script>
+
+
 </html>
