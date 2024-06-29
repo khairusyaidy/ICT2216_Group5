@@ -39,6 +39,9 @@ if (isset($_POST['logout'])) {
                 <a href="grooming.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'grooming.php' ? 'active' : '' ?>">Grooming</a>
                 <a href="daycare.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'daycare.php' ? 'active' : '' ?>">DayCare</a>
                 <a href="boarding.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'boarding.php' ? 'active' : '' ?>">Boarding</a>
+                <?php if ($logged_in): ?>
+                    <a href="mybookings.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'bookings.php' ? 'active' : '' ?>">My Bookings</a>
+                <?php endif; ?>
             </div>
             <div class="navbar-nav ml-auto">
                 <?php if ($logged_in): ?>
