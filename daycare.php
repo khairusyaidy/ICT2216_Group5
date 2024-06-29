@@ -70,31 +70,42 @@
 
             <hr style="margin: 40px 0; border-top: 1px solid #ccc;">
 
-            <div class="col text-center mb-4">
-                <h2>Ratings and Reviews</h2>
-                <p>
-                    We value the feedback from our clients and continually strive to improve our services. Here are some of the reviews from our happy customers:
-                    <br><br>
-                    <!-- Example Reviews -->
-                    <div style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                        <strong>Jane Doe</strong> - ★★★★★
+<div class="col text-center mb-4">
+    <h2>Ratings and Reviews</h2>
+    <p>
+        We value the feedback from our clients and continually strive to improve our services. Here are some of the reviews from our happy customers:
+        <br><br>
+        <?php
+        // Include the database connection file
+        include 'db_connect.php';
+
+        // Query to fetch reviews and service names where ServiceID is 3, 4, or 5
+        $sql = "SELECT review.Rating, review.Feedback, service.ServiceName 
+                FROM review 
+                JOIN service ON review.ServiceID = service.ID 
+                WHERE review.ServiceID = 2";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            // Output data of each row
+            while($row = $result->fetch_assoc()) {
+                // Display each review
+                $ratingStars = str_repeat('★', $row['Rating']) . str_repeat('☆', 5 - $row['Rating']);
+                echo "<div style='border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;'>
+                        <strong>{$row['ServiceName']}</strong> - {$ratingStars}
                         <br>
-                        "Fur Season Hotel took excellent care of my dog, Max. He came home happy and well-rested. Highly recommend!"
-                    </div>
-                    <div style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                        <strong>John Smith</strong> - ★★★★☆
-                        <br>
-                        "Great service and friendly staff. My dog loved the outdoor playtime."
-                    </div>
-                    <div style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                        <strong>Emily Johnson</strong> - ★★★★★
-                        <br>
-                        "Amazing experience! My dog was well taken care of and enjoyed all the activities. Will definitely use their service again."
-                    </div>
-                </p>
-            </div>
-        </div>
-    </section>
+                        \"{$row['Feedback']}\"
+                      </div>";
+            }
+        } else {
+            echo "No reviews available.";
+        }
+
+        // Close the connection
+        $conn->close();
+        ?>
+    </p>
+</div>
     <!-- daycare Services Section End -->
 
     <!-- Footer Start -->
