@@ -20,53 +20,93 @@
 </style>
 
 
-    <!-- daycare Services Section -->
+    <!-- boarding Services Section -->
     <section class="py-5">
     <div class="container px-4 px-lg-5 mt-3">
         <div class="row">
             <div class="col text-center mb-4">
-                <h1>Daycare Services at Fur Season Hotel</h1>
+                <h1>Boarding Services at Fur Season Hotel</h1>
                 <br>
-                <img class="img-fluid w-50" src="img/about-1.jpg" alt="About Image">
+                <img class="img-fluid w-50" src="img/about-2.jpg" alt="About Image">
                 <br>
                 <br>
                 <p>
-                    At Fur Season Hotel, we provide exceptional daycare services that cater to the needs of your beloved dogs. Our daycare program is designed to ensure that your pet enjoys a day filled with fun, exercise, and socialization in a safe and nurturing environment. Whether you're at work or just need a day to yourself, our dedicated staff will take care of your furry friend as if they were their own.
+                    At Fur Season Hotel, we offer premier boarding services that ensure your dog enjoys a comfortable and engaging stay while you’re away. Our boarding program is designed to provide a safe, nurturing, and fun environment for your furry friend, complete with a structured daily routine to keep them happy and healthy.
                 </p>
                 <br>
-                <h2>Daycare Schedule</h2>
+                <h2>Boarding Schedule</h2>
                 <p>
-                    Our daycare service operates on a convenient schedule to accommodate your busy life. You can drop off your dog in the morning and pick them up in the evening, giving you peace of mind throughout the day.
+                    Our boarding service includes convenient drop-off and pickup times to fit your schedule. You can rest assured knowing that your pet is in good hands from the moment they arrive until you pick them up.
                 </p>
                 <p>
                     <span>Pickup: 7:00 AM – 9:00 AM</span><br>
                     <span>Drop-off: 4:00 PM – 6:00 PM</span>
                 </p>
                 <br>
-                <h2>Daycare Activities</h2>
-                <p>
-                    At Fur Season Hotel, your dog will have the opportunity to engage in a variety of activities that promote physical and mental well-being. Our daycare includes supervised playtime, socialization with other dogs, and plenty of exercise. We also provide quiet time for rest and relaxation, ensuring that your pet returns home happy and tired after a full day of fun.
-                </p>
+                <h2>Daily Routine</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>8:00 AM – 9:00 AM</td>
+                            <td>Breakfast & Potty Break</td>
+                        </tr>
+                        <tr>
+                            <td>9:00 AM – 11:00 AM</td>
+                            <td>Outdoor Time</td>
+                        </tr>
+                        <tr>
+                            <td>11:00 AM – 12:00 PM</td>
+                            <td>Playtime</td>
+                        </tr>
+                        <tr>
+                            <td>12:00 PM – 2:00 PM</td>
+                            <td>Nap Time</td>
+                        </tr>
+                        <tr>
+                            <td>2:00 PM – 4:00 PM</td>
+                            <td>Brushing, Massage, and Playtime</td>
+                        </tr>
+                        <tr>
+                            <td>5:00 PM – 6:00 PM</td>
+                            <td>Dinner Time & Potty Break</td>
+                        </tr>
+                        <tr>
+                            <td>6:00 PM – 9:00 PM</td>
+                            <td>Quiet Time</td>
+                        </tr>
+                        <tr>
+                            <td>9:00 PM – 8:00 AM</td>
+                            <td>Bed Time</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <br>
                 <h2>Rates</h2>
                 <p>
-                    Our daycare service is competitively priced at $80 per day. This fee includes all activities and supervision, ensuring your dog receives the highest level of care and attention.
+                    Our boarding service is competitively priced at $100 per day. This includes all meals, activities, and personalized care to ensure your dog has a pleasant and comfortable stay.
                 </p>
                 <br>
-                
-                <br>
                 <h6>
-                    At Fur Season Hotel, we understand the importance of providing a safe, fun, and stimulating environment for your dog while you're away. Trust us to take care of your furry friend, and they'll look forward to their time at our daycare as much as you enjoy your peace of mind. Click on "Book Now" below to secure a spot for your dog in our daycare program!
+                    At Fur Season Hotel, we understand how important it is to know your dog is well taken care of while you’re away. Our boarding services are designed to provide peace of mind, knowing that your furry friend is enjoying their stay in a safe, fun, and loving environment. Click on "Book Now" below to book your dog’s boarding stay with us!
                 </h6>
             </div>
         </div>
         <div class="row">
-                <div class="col text-center mb-4">
-                    <button onclick="window.location.href='booking_page.html'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
-                </div>
+            <div class="col text-center mb-4">
+                <button onclick="window.location.href='booking_page.html'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
             </div>
+        </div>
     </div>
 </section>
+
+
+    <!-- boarding Services Section End -->
 
             <hr style="margin: 40px 0; border-top: 1px solid #ccc;">
 
@@ -95,7 +135,6 @@
             </div>
         </div>
     </section>
-    <!-- daycare Services Section End -->
 
     <!-- Footer Start -->
     <?php include "footer.inc.php"; ?>
