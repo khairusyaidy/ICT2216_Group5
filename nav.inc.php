@@ -36,9 +36,11 @@ if (isset($_POST['logout'])) {
         <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
             <div class="navbar-nav mr-auto py-0">
                 <a href="index.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">Home</a>
-                <a href="grooming.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'grooming.php' ? 'active' : '' ?>">Grooming</a>
-                <a href="daycare.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'daycare.php' ? 'active' : '' ?>">DayCare</a>
                 <a href="boarding.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'boarding.php' ? 'active' : '' ?>">Boarding</a>
+                <a href="daycare.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'daycare.php' ? 'active' : '' ?>">DayCare</a>
+                <a href="grooming.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'grooming.php' ? 'active' : '' ?>">Grooming</a>
+                
+                
                 <?php if ($logged_in): ?>
                     <a href="mybookings.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'bookings.php' ? 'active' : '' ?>">My Bookings</a>
                 <?php endif; ?>
