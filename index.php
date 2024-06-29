@@ -182,7 +182,6 @@
     <div class="container-fluid bg-light my-5 p-0 py-5">
     <div class="container p-0 py-5">
         <div class="d-flex flex-column text-center mb-5">
-            
             <h1 class="display-4 m-0">Our Customers <span class="text-primary">Says</span></h1>
         </div>
         <div class="owl-carousel testimonial-carousel">
@@ -191,16 +190,28 @@
             include 'db_connect.php';
 
             // Query to fetch reviews and service names where ServiceID is 3, 4, 5, 6, 7, 8, 9, 10, 11
-            $sql = "SELECT review.Rating, review.Feedback
-                FROM review 
-                JOIN service ON review.ServiceID = service.ID";
+            $sql = "SELECT review.Rating, review.Feedback, review.ServiceID 
+                    FROM review";
             $result = $conn->query($sql);
-            
-            $serviceName = "Boarding";
-            
-if ($result->num_rows > 0) {
-            // Output data of each row
-            while($row = $result->fetch_assoc()) {
+
+            if ($result->num_rows > 0) {
+                // Output data of each row
+                while($row = $result->fetch_assoc()) {
+                    // Determine the service name based on ServiceID
+                    if (in_array($row['ServiceID'], [1])) {
+                        $serviceName = "Boarding";
+                    } elseif (in_array($row['ServiceID'], [2])) {
+                        $serviceName = "DayCare";
+                    }elseif (in_array($row['ServiceID'], [3, 4, 5])) {
+                        $serviceName = "Shower";
+                    }elseif (in_array($row['ServiceID'], [6, 7, 8])) {
+                        $serviceName = "Express Grooming";
+                    } elseif (in_array($row['ServiceID'], [9, 10, 11])) {
+                        $serviceName = "Full Grooming";
+                    } else {
+                        $serviceName = "Unknown Service"; // Default if ServiceID doesn't match
+                    }
+
                     // Display each review
                     $ratingStars = str_repeat('★', $row['Rating']) . str_repeat('☆', 5 - $row['Rating']);
                     echo "<div class='bg-white mx-3 p-4'>
@@ -210,10 +221,8 @@ if ($result->num_rows > 0) {
                             </div>
                             <p class='m-0'>\"{$row['Feedback']}\"</p>
                           </div>";
-                
-            }
-}
-           else {
+                }
+            } else {
                 echo "<p>No reviews available.</p>";
             }
 
