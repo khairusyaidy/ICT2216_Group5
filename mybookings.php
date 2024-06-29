@@ -13,10 +13,10 @@
     <!-- Navbar End -->
 
     
-    
+    <br>
 
             <div class="col text-center mb-4">
-    <button onclick="window.location.href='addreview.php'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
+    <button onclick="window.location.href='addreview.php'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Review</button>
 </div>
 
         

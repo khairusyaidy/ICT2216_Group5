@@ -112,7 +112,7 @@
                         <h3 class="flaticon-house display-3 font-weight-normal text-secondary mb-3"></h3>
                         <h3 class="mb-3">Pet Boarding</h3>
                         <p>Enjoy peace of mind knowing your dog is in good hands with our top-quality boarding services.</p>
-                        <a class="text-uppercase font-weight-bold" href="">Read More</a>
+                        <a class="text-uppercase font-weight-bold" href="boarding.php">Read More</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
@@ -120,7 +120,7 @@
                         <h3 class="flaticon-dog display-3 font-weight-normal text-secondary mb-3"></h3>
                         <h3 class="mb-3">Pet Daycare</h3>
                         <p>Our daycare program provides a fun and engaging environment for your dog while you're away.</p>
-                        <a class="text-uppercase font-weight-bold" href="">Read More</a>
+                        <a class="text-uppercase font-weight-bold" href="daycare.php">Read More</a>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-4 mb-4">
@@ -128,7 +128,7 @@
                         <h3 class="flaticon-grooming display-3 font-weight-normal text-secondary mb-3"></h3>
                         <h3 class="mb-3">Pet Grooming</h3>
                         <p>Keep your dog looking and feeling their best with our comprehensive grooming services.</p>
-                        <a class="text-uppercase font-weight-bold" href="">Read More</a>
+                        <a class="text-uppercase font-weight-bold" href="grooming.php">Read More</a>
                     </div>
                 </div>
                 
