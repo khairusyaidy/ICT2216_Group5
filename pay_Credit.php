@@ -12,7 +12,7 @@ if (isset($_SESSION['booking_id']) && isset($_SESSION['total_price'])) {
     $total_price = $_SESSION['total_price'];
 
     // If the "Done" button is clicked
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['done'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['pay'])) {
         // Update the Paid status to 1 for this booking ID
         $update_sql = "UPDATE booking SET Paid = 1 WHERE ID = '$booking_id'";
 
@@ -56,33 +56,33 @@ $conn->close();
         <!-- Navbar End -->
 
         <div id="form_container">
-            <form>
-                Cardholder Name <br>
+            <form method="post">
+                <b>Cardholder Name:</b>
                 <input type="text" name="cardholder_name" style="width: 300px; height: 25px;" required>
 
                 <br>
 
-                Card Number <br>
+                <b>Card Number:</b>
                 <input type="text" maxlength="19" id="number-input" style="width: 300px; height: 25px;" required>
                 <span id="numErrorMessage" class="error-message">Please enter exactly 16 digits.</span>
 
                 <br>
 
-                Card Expiration <br>
-                <input type="text" maxlength="5" id="date-input" placeholder="MM/DD" style="width: 80px; height: 25px;" required>
-                <span id="expErrorMessage" class="error-message">Please enter a valid date in MM/DD format.</span>
+                <b>Card Expiration:</b>
+                <input type="text" maxlength="5" id="date-input" placeholder="MM/YY" style="width: 80px; height: 25px;" required>
+                <span id="expErrorMessage" class="error-message">Please enter a valid date in MM/YY format.</span>
 
                 <br>
 
-                CVC <br>
+                <b>CVC:</b>
                 <input type="number" maxlength="3" id="cvc_input" style="width: 80px; height: 25px;" required>
                 <span id="cvcErrorMessage" class="error-message">Please enter exactly 3 digits.</span>
 
                 <br><br>
 
-                Total payment amount: 
+                <p><b>Total payable amount:</b> $<?php echo $total_price; ?></p><br>
 
-                <br><br>
+                <br>
 
                 <input type="submit" id="credit_btn" name="pay" value="Pay" class="btn btn-lg btn-primary mt-3 mt-md-4 px-4">
 
