@@ -1,63 +1,58 @@
 <?php
+session_start();
 
 // Include database connection script
-include "db_connect.php"; // Ensure this file initializes $mysqli correctly
+include "db_connect.php";
 
-session_start(); // Start PHP session to access $_SESSION variables
-
-// Function to sanitize input
-function sanitizeInput($input)
-{
+// Function to sanitize and validate input
+function sanitizeInput($input) {
     return htmlspecialchars(trim($input));
 }
 
-// Validate and sanitize input
-$currentPassword = sanitizeInput($_POST['currentPassword']);
-$newPassword = sanitizeInput($_POST['newPassword']);
-$confirmPassword = sanitizeInput($_POST['confirmPassword']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize inputs
+    $currentPassword = sanitizeInput($_POST['currentPassword']);
+    $newPassword = sanitizeInput($_POST['newPassword']);
+    $confirmPassword = sanitizeInput($_POST['confirmPassword']);
 
-// Retrieve customer ID from session
-$customerID = $_SESSION['id'];
+    // Retrieve customer ID from session
+    $customerID = $_SESSION['id'];
 
-// Query to fetch current password hash from database
-$query = "SELECT Password FROM customer WHERE ID = ?";
-$stmt = $mysqli->prepare($query);
-$stmt->bind_param("i", $customerID);
-$stmt->execute();
-$stmt->bind_result($hashedPassword);
-$stmt->fetch();
-$stmt->close();
+    // Query to retrieve hashed password from database
+    $query = "SELECT Password FROM customer WHERE ID = ?";
+    $stmt = $mysqli->prepare($query);
+    $stmt->bind_param("i", $customerID);
+    $stmt->execute();
+    $stmt->bind_result($storedPassword);
+    $stmt->fetch();
+    $stmt->close();
 
-// Verify if the current password matches the one in the database
-if (password_verify($currentPassword, $hashedPassword)) {
-    // Check if new password and confirm password match
-    if ($newPassword === $confirmPassword) {
-        // Hash the new password
-        $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+    // Verify if current password matches the stored password
+    if (password_verify($currentPassword, $storedPassword)) {
+        // Current password matches, proceed to update password
+        if ($newPassword === $confirmPassword) {
+            // Hash the new password
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-        // Update password in the database
-        
-// Execute update query
-$updateQuery = "UPDATE customer SET Password = ? WHERE ID = ?";
-$updateStmt = $mysqli->prepare($updateQuery);
-$updateStmt->bind_param("si", $hashedNewPassword, $customerID);
+            // Update password in database
+            $updateQuery = "UPDATE customer SET Password = ? WHERE ID = ?";
+            $updateStmt = $mysqli->prepare($updateQuery);
+            $updateStmt->bind_param("si", $hashedPassword, $customerID);
+            $updateStmt->execute();
+            $updateStmt->close();
 
-if ($updateStmt->execute()) {
-    // Password updated successfully
-    $_SESSION['password_change_success'] = true;
-    header("Location: profilepage.php");
-    exit();
+            // Set success message
+            $_SESSION['password_change_success'] = true;
+            echo 'success'; // Send success response
+        } else {
+            echo 'New password and confirm password do not match.';
+        }
+    } else {
+        // Current password does not match, set error message
+        echo 'Current password is incorrect.';
+    }
 } else {
-    // Error updating password
-    $_SESSION['password_change_error'] = "Error updating password: " . $mysqli->error;
-    header("Location: profilepage.php");
-    exit();
-}
-
-}
-}else {
-    // Redirect to profile page with error message
-    $_SESSION['password_change_error'] = "Current password is incorrect.";
+    // Redirect if accessed directly
     header("Location: profilepage.php");
     exit();
 }

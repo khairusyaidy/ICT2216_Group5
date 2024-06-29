@@ -5,8 +5,9 @@ include "db_connect.php"; // Ensure this file initializes $mysqli correctly
 
 // Check for password change success message
 if (isset($_SESSION['password_change_success']) && $_SESSION['password_change_success']) {
-    echo "<div class='alert alert-success' role='alert'>Password changed successfully!</div>";
+    echo "<div class='alert alert-success' role='alert'>" . $_SESSION['password_change_message'] . "</div>";
     unset($_SESSION['password_change_success']);
+    unset($_SESSION['password_change_message']);
 }
 
 // Check for password change error message
@@ -14,7 +15,6 @@ if (isset($_SESSION['password_change_error'])) {
     echo "<div class='alert alert-danger' role='alert'>" . $_SESSION['password_change_error'] . "</div>";
     unset($_SESSION['password_change_error']);
 }
-
 
 // Function to sanitize and validate input
 function sanitizeInput($input)
@@ -316,17 +316,57 @@ function validateAge($age)
     <!-- Custom JavaScript -->
     <script>
     function validateChangePasswordForm() {
-            var newPassword = document.getElementById('newPassword').value.trim();
-            var confirmPassword = document.getElementById('confirmPassword').value.trim();
+        var currentPassword = document.getElementById('currentPassword').value.trim();
+        var newPassword = document.getElementById('newPassword').value.trim();
+        var confirmPassword = document.getElementById('confirmPassword').value.trim();
 
-            // Check if new password matches confirm password
-            if (newPassword !== confirmPassword) {
-                document.getElementById('passwordMatchError').textContent = 'Passwords do not match.';
-                return false;
-            } else {
-                document.getElementById('changePasswordForm').submit(); // Submit form if validation passes
+        // Example of password matching validation (you may have additional validations)
+        if (newPassword !== confirmPassword) {
+            document.getElementById('passwordMatchError').textContent = 'Passwords do not match.';
+            return false;
+        }
+
+        // Create an XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+        var url = 'changepassword.php'; // URL of your PHP script handling the request
+
+        // Prepare data to be sent
+        var params = 'currentPassword=' + encodeURIComponent(currentPassword) +
+                     '&newPassword=' + encodeURIComponent(newPassword) +
+                     '&confirmPassword=' + encodeURIComponent(confirmPassword);
+
+        // Configure the AJAX request
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        // Define what happens on successful data submission
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Check the response from PHP script
+                if (xhr.responseText === 'success') {
+                    // Password changed successfully, handle accordingly (e.g., show success message)
+                    alert('Password changed successfully.');
+                    // Optionally, you can redirect or update UI
+                } else {
+                    // Display error message returned from PHP (e.g., incorrect current password)
+                    document.getElementById('passwordMatchError').textContent = xhr.responseText;
+                }
             }
-        }    
+        };
+
+        // Handle network errors
+        xhr.onerror = function() {
+            console.error('Error occurred while sending the request.');
+        };
+
+        // Send the request
+        xhr.send(params);
+
+        // Prevent the form from submitting in the traditional way
+        return false;
+    }
+
+   
     
     // Client-side validation for pet age as integer
         function validateEditPetForm(petID) {

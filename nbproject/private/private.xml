@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/SSDProject/price.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/booking.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/index.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/about.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/single.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/service.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/contact.php</file>
-            <file>file:/C:/xampp/htdocs/SSDProject/blog.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/profilepage.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/changepassword.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/index.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/addpet.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/nav.inc.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/signup.php</file>
+            <file>file:/C:/xampp/htdocs/ICT2216_Group5/db_connect.php</file>
         </group>
     </open-files>
 </project-private>
