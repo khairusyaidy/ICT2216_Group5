@@ -36,6 +36,7 @@ $conn->close();
 <html lang="en">
     <head>
         <?php include "head.inc.php"; ?>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1R4Kmve1gKv9VObNUz3cvhPOeVr5J4kNIPN7A0JQquz7m0Y4rJ/9iiWE6Us52frG4Vap5lKfYiz/+O5Bl1bMOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <!-- Topbar Start -->
@@ -63,6 +64,11 @@ $conn->close();
                                     <p class="card-text"><b>Food:</b> <?php echo $booking['Food'] ? 'Yes' : 'No'; ?></p>
                                     <p class="card-text"><b>Remarks:</b> <?php echo htmlspecialchars($booking['Remarks']); ?></p>
                                     <p class="card-text"><b>Total Price:</b> $<?php echo htmlspecialchars($booking['TotalPrice']); ?></p>
+
+                                    <div class="d-flex justify-content-end">
+                                        <a href="edit_booking.php?booking_id=<?php echo $booking['ID']; ?>" class="mr-2"><i class="fas fa-edit"></i></a>
+                                        <a href="delete_booking.php?booking_id=<?php echo $booking['ID']; ?>"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
