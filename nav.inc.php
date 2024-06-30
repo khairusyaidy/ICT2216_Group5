@@ -11,18 +11,14 @@ if (!$logged_in) {
     exit;
 }
 
+
 // Handle logout request
 if (isset($_POST['logout'])) {
-    // Unset all session variables
-    $_SESSION = array();
-
-    // Destroy the session
-    session_destroy();
-
-    // Redirect to login page after logout
-    header("Location: login.php");
+    header("Location: logout.php");
     exit;
 }
+
+
 ?>
 
 <div class="container-fluid p-0">
