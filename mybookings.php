@@ -19,10 +19,17 @@ $sql = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPric
 
 $result = $conn->query($sql);
 
-$bookings = [];
+$currentBookings = [];
+$historyBookings = [];
+$today = date('Y-m-d');
+
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $bookings[] = $row;
+        if ($row['DropOffDate'] >= $today) {
+            $currentBookings[] = $row;
+        } else {
+            $historyBookings[] = $row;
+        }
     }
 } else {
     echo "No bookings found.";
@@ -49,10 +56,11 @@ $conn->close();
 
 
         <div class="container mt-5">
-            <h2>My Bookings</h2>
+
+            <h3>Current Bookings</h3>
             <div class="row">
-                <?php if (!empty($bookings)): ?>
-                    <?php foreach ($bookings as $booking): ?>
+                <?php if (!empty($currentBookings)): ?>
+                    <?php foreach ($currentBookings as $booking): ?>
                         <div class="col-md-4">
                             <div class="card mb-4">
                                 <div class="card-body">
@@ -74,7 +82,31 @@ $conn->close();
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>No bookings found.</p>
+                    <p>No current bookings found.</p>
+                <?php endif; ?>
+            </div>
+
+            <h3>Booking History</h3>
+            <div class="row">
+                <?php if (!empty($historyBookings)): ?>
+                    <?php foreach ($historyBookings as $booking): ?>
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?php echo htmlspecialchars($booking['ServiceName']); ?></h5>
+                                    <p class="card-text"><b>Pet Name:</b> <?php echo htmlspecialchars($booking['PetName']); ?></p>
+                                    <p class="card-text"><b>Pet Weight:</b> <?php echo htmlspecialchars($booking['PetWeight']); ?> kg</p>
+                                    <p class="card-text"><b>Drop-off Date:</b> <?php echo htmlspecialchars($booking['DropOffDate']); ?></p>
+                                    <p class="card-text"><b>Pick-up Date:</b> <?php echo htmlspecialchars($booking['PickUpDate']); ?></p>
+                                    <p class="card-text"><b>Food:</b> <?php echo $booking['Food'] ? 'Yes' : 'No'; ?></p>
+                                    <p class="card-text"><b>Remarks:</b> <?php echo htmlspecialchars($booking['Remarks']); ?></p>
+                                    <p class="card-text"><b>Total Price:</b> $<?php echo htmlspecialchars($booking['TotalPrice']); ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No booking history found.</p>
                 <?php endif; ?>
             </div>
         </div>

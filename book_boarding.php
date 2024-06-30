@@ -131,10 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <p><b>Complementary Food:</b></p>
 
-                <input type="radio" id="yes" name="yes" value="Yes">
+                <input type="radio" id="yes" name="food" value="Yes">
                 <label for="yes">Yes</label><br>
 
-                <input type="radio" id="no" name="no" value="No">
+                <input type="radio" id="no" name="food" value="No">
                 <label for="no">No</label><br>
 
                 <p><b>Allergy / Comments /Remarks:</b></p>
