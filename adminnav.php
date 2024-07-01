@@ -28,7 +28,7 @@ if (isset($_POST['logout'])) {
         </button>
         <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
             <div class="navbar-nav mr-auto py-0">
-                <a href="index.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">Home</a>
+                <a href="staffhomepage.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffhomepage.php' ? 'active' : '' ?>">Home</a>
                 <a href="availability.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'availability.php' ? 'active' : '' ?>">Availability</a>
                 <a href="booking.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'booking.php' ? 'active' : '' ?>">Booking</a>
                 <a href="staffaccount.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffaccount.php' ? 'active' : '' ?>">Accounts</a>
