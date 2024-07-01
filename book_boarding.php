@@ -26,11 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pet_id = $_POST['pet'];
     $dropoff_date = $_POST['boarding_dropoffdate'];
     $pickup_date = $_POST['boarding_pickupdate'];
-    $food = $_POST['yes'] ?? 'No';
+    $food = isset($_POST['food']) && $_POST['food'] == 'Yes' ? 1 : 0;
     $comments = $_POST['comments'];
-
-    // Convert food value to 1 or 0
-    $food = ($food === 'Yes') ? 1 : 0;
 
     // Validate and sanitize input data
     $pet_id = $conn->real_escape_string($pet_id);
