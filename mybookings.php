@@ -1,5 +1,5 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel') {
 // Ensure session is started
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
@@ -40,8 +40,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
 
 // Proceed with deletion
-            $stmt = $conn->prepare("DELETE FROM booking WHERE ID = ?");
-            $stmt->bind_param("i", $bookingID);
+            $reason = isset($_POST['reason']) ? $_POST['reason'] : '';
+
+            if (empty($reason)) {
+                echo json_encode(["success" => false, "message" => "Reason is required for cancellation."]);
+                exit();
+            }
+
+            $stmt = $conn->prepare("UPDATE booking SET Status = 'Cancelled', Reason = ? WHERE ID = ?");
+            $stmt->bind_param("si", $reason, $bookingID);
 
             if ($stmt->execute()) {
                 echo json_encode(["success" => true]);
@@ -78,7 +85,7 @@ $sql = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPric
         FROM booking b
         JOIN service s ON b.ServiceID = s.ID
         JOIN pet p ON b.PetID = p.ID
-        WHERE b.CustomerID = '$customerID'";
+        WHERE b.CustomerID = '$customerID' AND b.Status != 'Cancelled'";
 
 $result = $conn->query($sql);
 
@@ -94,9 +101,7 @@ if ($result->num_rows > 0) {
             $historyBookings[] = $row;
         }
     }
-} else {
-    echo "No bookings found.";
-}
+} 
 
 $conn->close();
 ?>
@@ -109,8 +114,9 @@ $conn->close();
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1R4Kmve1gKv9VObNUz3cvhPOeVr5J4kNIPN7A0JQquz7m0Y4rJ/9iiWE6Us52frG4Vap5lKfYiz/+O5Bl1bMOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <!-- Topbar Start -->
-        <?php include "topbar.inc.php"; ?>
+        <!--Topbar Start-->
+        <?php include "topbar.inc.php";
+        ?>
         <!-- Topbar End -->
 
         <!-- Navbar Start -->
@@ -124,7 +130,7 @@ $conn->close();
             <div class="row">
                 <?php if (!empty($currentBookings)): ?>
                     <?php foreach ($currentBookings as $booking): ?>
-                        <div class="col-md-4">
+                        <div class="col-md-4" id="booking-card-<?php echo $booking['ID']; ?>">
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo htmlspecialchars($booking['ServiceName']); ?></h5>
@@ -158,7 +164,7 @@ $conn->close();
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo htmlspecialchars($booking['ServiceName']); ?></h5>
                                     <p class="card-text"><b>Pet Name:</b> <?php echo htmlspecialchars($booking['PetName']); ?></p>
-                                    <p class="card-text"><b>Pet Weight:</b> <?php echo htmlspecialchars($booking['PetWeight']); ?> kg</p>
+                                    <p class="card-text"><b>Pet Weight:</b> <?php echo htmlspecialchars($booking['PetWeight']); ?></p>
                                     <p class="card-text"><b>Drop-off Date:</b> <?php echo htmlspecialchars($booking['DropOffDate']); ?></p>
                                     <p class="card-text"><b>Pick-up Date:</b> <?php echo htmlspecialchars($booking['PickUpDate']); ?></p>
                                     <p class="card-text"><b>Food:</b> <?php echo $booking['Food'] ? 'Yes' : 'No'; ?></p>
@@ -224,27 +230,42 @@ $conn->close();
                                                 const dayDifference = timeDifference / (1000 * 3600 * 24);
 
                                                 if (dayDifference < 2) {
-                                                    alert("Not allowed to cancel booking.");
+                                                    alert("Not allowed to cancel booking less than 2 days from drop-off date.");
                                                 } else {
                                                     if (confirm("Are you sure you want to delete this booking?")) {
-                                                        // AJAX request to delete the booking
-                                                        const xhr = new XMLHttpRequest();
-                                                        xhr.open("POST", "", true); // Send request to the same file
-                                                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                                                        xhr.onreadystatechange = function () {
-                                                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                                                                const response = JSON.parse(xhr.responseText);
-                                                                if (response.success) {
-                                                                    // Remove the booking card from the UI immediately
-                                                                    const card = element.closest('.card');
-                                                                    card.parentNode.removeChild(card);
-                                                                } else {
-                                                                    alert("Failed to delete booking.");
+                                                        const reason = prompt("Please enter the reason for cancellation:");
+                                                        if (reason !== null && reason.trim() !== "") {
+                                                            console.log("Initiating AJAX request to cancel booking with ID:", bookingId);
+                                                            // AJAX request to cancel the booking
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "mybookings.php", // Adjust URL if needed
+                                                                data: {
+                                                                    action: 'cancel',
+                                                                    booking_id: bookingId,
+                                                                    reason: reason
+                                                                },
+                                                                dataType: "json",
+                                                                success: function (response) {
+                                                                    if (response.success) {
+                                                                        // Remove the booking card from the UI immediately
+                                                                        $('#booking-card-' + bookingId).remove();
+                                                                        console.log("Booking card removed successfully.");
+                                                                        location.reload();
+                                                                    } else {
+                                                                        console.error("Failed to cancel booking:", response.message);
+                                                                        alert(response.message || "Failed to cancel booking.");
+                                                                    }
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Failed to cancel booking. Server returned status:", status);
+                                                                    alert("Failed to cancel booking. Please try again.");
                                                                 }
-                                                            }
-                                                        };
-                                                        xhr.send("action=delete&booking_id=" + bookingId);
-                                                        location.reload();
+                                                            });
+                                                        } else {
+                                                            console.error("Reason is required for cancellation.");
+                                                            alert("Reason is required for cancellation.");
+                                                        }
                                                     }
                                                 }
                                             }
