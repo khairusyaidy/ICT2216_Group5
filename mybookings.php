@@ -101,7 +101,7 @@ if ($result->num_rows > 0) {
             $historyBookings[] = $row;
         }
     }
-} 
+}
 
 $conn->close();
 ?>
@@ -171,9 +171,11 @@ $conn->close();
                                     <p class="card-text"><b>Remarks:</b> <?php echo htmlspecialchars($booking['Remarks']); ?></p>
                                     <p class="card-text"><b>Total Price:</b> $<?php echo htmlspecialchars($booking['TotalPrice']); ?></p>
 
-                                    <div class="col text-center mb-4">
-                                        <button onclick="window.location.href = 'addreview.php?booking_id=<?php echo $booking['ID']; ?>'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Review</button>
-                                    </div>
+                                    <?php if (!isset($booking['ReviewID']) || $booking['ReviewID'] === null): ?>
+                                        <div class="col text-center mb-4">
+                                            <button onclick="window.location.href = 'addreview.php?booking_id=<?php echo $booking['ID']; ?>'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Review</button>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -210,65 +212,65 @@ $conn->close();
 
         <!-- Custom JavaScript -->
         <script>
-                                            function checkEditDateAndProceed(dropOffDate, url) {
-                                                const today = new Date();
-                                                const dropOff = new Date(dropOffDate);
-                                                const timeDifference = dropOff.getTime() - today.getTime();
-                                                const dayDifference = timeDifference / (1000 * 3600 * 24);
+                                        function checkEditDateAndProceed(dropOffDate, url) {
+                                            const today = new Date();
+                                            const dropOff = new Date(dropOffDate);
+                                            const timeDifference = dropOff.getTime() - today.getTime();
+                                            const dayDifference = timeDifference / (1000 * 3600 * 24);
 
-                                                if (dayDifference < 2) {
-                                                    alert("Not allowed to modify booking.");
-                                                } else {
-                                                    window.location.href = url;
-                                                }
+                                            if (dayDifference < 2) {
+                                                alert("Not allowed to modify booking.");
+                                            } else {
+                                                window.location.href = url;
                                             }
+                                        }
 
-                                            function checkDeleteDateAndProceed(dropOffDate, bookingId) {
-                                                const today = new Date();
-                                                const dropOff = new Date(dropOffDate);
-                                                const timeDifference = dropOff.getTime() - today.getTime();
-                                                const dayDifference = timeDifference / (1000 * 3600 * 24);
+                                        function checkDeleteDateAndProceed(dropOffDate, bookingId) {
+                                            const today = new Date();
+                                            const dropOff = new Date(dropOffDate);
+                                            const timeDifference = dropOff.getTime() - today.getTime();
+                                            const dayDifference = timeDifference / (1000 * 3600 * 24);
 
-                                                if (dayDifference < 2) {
-                                                    alert("Not allowed to cancel booking less than 2 days from drop-off date.");
-                                                } else {
-                                                    if (confirm("Are you sure you want to delete this booking?")) {
-                                                        const reason = prompt("Please enter the reason for cancellation:");
-                                                        if (reason !== null && reason.trim() !== "") {
-                                                            console.log("Initiating AJAX request to cancel booking with ID:", bookingId);
-                                                            // AJAX request to cancel the booking
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "mybookings.php", // Adjust URL if needed
-                                                                data: {
-                                                                    action: 'cancel',
-                                                                    booking_id: bookingId,
-                                                                    reason: reason
-                                                                },
-                                                                dataType: "json",
-                                                                success: function (response) {
-                                                                    if (response.success) {
-                                                                        // Remove the booking card from the UI immediately
-                                                                        $('#booking-card-' + bookingId).remove();
-                                                                        console.log("Booking card removed successfully.");
-                                                                        location.reload();
-                                                                    } else {
-                                                                        console.error("Failed to cancel booking:", response.message);
-                                                                        alert(response.message || "Failed to cancel booking.");
-                                                                    }
-                                                                },
-                                                                error: function (xhr, status, error) {
-                                                                    console.error("Failed to cancel booking. Server returned status:", status);
-                                                                    alert("Failed to cancel booking. Please try again.");
+                                            if (dayDifference < 2) {
+                                                alert("Not allowed to cancel booking less than 2 days from drop-off date.");
+                                            } else {
+                                                if (confirm("Are you sure you want to delete this booking?")) {
+                                                    const reason = prompt("Please enter the reason for cancellation:");
+                                                    if (reason !== null && reason.trim() !== "") {
+                                                        console.log("Initiating AJAX request to cancel booking with ID:", bookingId);
+                                                        // AJAX request to cancel the booking
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "mybookings.php", // Adjust URL if needed
+                                                            data: {
+                                                                action: 'cancel',
+                                                                booking_id: bookingId,
+                                                                reason: reason
+                                                            },
+                                                            dataType: "json",
+                                                            success: function (response) {
+                                                                if (response.success) {
+                                                                    // Remove the booking card from the UI immediately
+                                                                    $('#booking-card-' + bookingId).remove();
+                                                                    console.log("Booking card removed successfully.");
+                                                                    location.reload();
+                                                                } else {
+                                                                    console.error("Failed to cancel booking:", response.message);
+                                                                    alert(response.message || "Failed to cancel booking.");
                                                                 }
-                                                            });
-                                                        } else {
-                                                            console.error("Reason is required for cancellation.");
-                                                            alert("Reason is required for cancellation.");
-                                                        }
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                console.error("Failed to cancel booking. Server returned status:", status);
+                                                                alert("Failed to cancel booking. Please try again.");
+                                                            }
+                                                        });
+                                                    } else {
+                                                        console.error("Reason is required for cancellation.");
+                                                        alert("Reason is required for cancellation.");
                                                     }
                                                 }
                                             }
+                                        }
         </script>
     </body>
 </html>
