@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
         <div class="container px-4 px-lg-5 mt-3">
             <div class="row">
                 <div class="col">
-                    <h1>Edit Boarding Booking</h1>
+                    <h1>Edit Grooming Booking</h1>
                 </div>
             </div>
 

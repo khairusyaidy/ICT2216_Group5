@@ -30,7 +30,7 @@ if (isset($_POST['logout'])) {
             <div class="navbar-nav mr-auto py-0">
                 <a href="staffhomepage.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffhomepage.php' ? 'active' : '' ?>">Home</a>
                 <a href="availability.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'availability.php' ? 'active' : '' ?>">Availability</a>
-                <a href="booking.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'booking.php' ? 'active' : '' ?>">Booking</a>
+                <a href="sallbooking.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'sallbooking.php' ? 'active' : '' ?>">Booking</a>
                 <a href="staffaccount.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffaccount.php' ? 'active' : '' ?>">Accounts</a>
             </div>
             <div class="navbar-nav ml-auto">
