@@ -16,7 +16,7 @@
         <div class="container px-4 px-lg-5 mt-3">
             <div class="row">
                 <div class="col text-center mb-4">
-                    <h1>Grooming Bookings Details for Today</h1>
+                    <h1>Boarding Bookings Details for Today</h1>
                 </div>
             </div>
 
@@ -35,12 +35,12 @@
             // Get today's date
             $today = date('Y-m-d');
 
-            // Query to fetch grooming bookings for today
-            $sql = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, s.ServiceName, p.Name AS PetName
+            // Query to fetch boarding bookings for today
+            $sql = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, p.Name AS PetName, c.FirstName, c.LastName
                     FROM Booking b
-                    JOIN Service s ON b.ServiceID = s.ID
                     JOIN Pet p ON b.PetID = p.ID
-                    WHERE s.ID BETWEEN 3 AND 11
+                    JOIN Customer c ON b.CustomerID = c.ID
+                    WHERE b.ServiceID = 1
                     AND DATE(b.DropOffDate) = '$today'";
 
             $result = $conn->query($sql);
@@ -55,7 +55,7 @@
                     echo '<h6 class="m-0 font-weight-bold text-primary">' . htmlspecialchars($row['PetName']) . '</h6>';
                     echo '</div>';
                     echo '<div class="card-body">';
-                    echo '<p><strong>Service:</strong> ' . htmlspecialchars($row['ServiceName']) . '</p>';
+                    echo '<p><strong>Owner:</strong> ' . htmlspecialchars($row['FirstName'] . ' ' . $row['LastName']) . '</p>';
                     echo '<p><strong>Drop-off Date:</strong> ' . htmlspecialchars($row['DropOffDate']) . '</p>';
                     echo '<p><strong>Pick-up Date:</strong> ' . htmlspecialchars($row['PickUpDate']) . '</p>';
                     echo '<p><strong>Food:</strong> ' . ($row['Food'] ? 'Yes' : 'No') . '</p>';
@@ -72,11 +72,11 @@
                     // Display different buttons based on booking status
                     if ($row['Status'] != 'Rejected') {
                         echo '<div class="mb-3">'; // Adding margin bottom
-                        echo '<a href="sgroomingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
+                        echo '<a href="sboardingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
                         echo '</div>';
                         
                         // Add form for rejecting booking
-                        echo '<form action="sgroomingreject.php" method="post" class="mb-3">';
+                        echo '<form action="sboardingreject.php" method="post" class="mb-3">';
                         echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
 
                         // Properly formatted reason input box
@@ -98,7 +98,7 @@
             } else {
                 echo '<div class="row">';
                 echo '<div class="col">';
-                echo '<div class="alert alert-info">No grooming bookings found for today.</div>';
+                echo '<div class="alert alert-info">No boarding bookings found for today.</div>';
                 echo '</div>';
                 echo '</div>';
             }

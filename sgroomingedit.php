@@ -16,11 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     $booking_id = intval($_POST['booking_id']);
     $dropoff_date = $_POST['dropoff_date']; // Example field, adjust as per your form
     $reason = $_POST['reason']; // Reason for changing the date
-
+    
     // Update booking in database
-    $sql = "UPDATE Booking SET DropOffDate = ? WHERE ID = ?";
+    $sql = "UPDATE Booking SET DropOffDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $dropoff_date, $booking_id);
+    $stmt->bind_param("ssi", $dropoff_date, $reason, $booking_id);
 
     if ($stmt->execute()) {
         // Booking updated successfully
@@ -67,14 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
             echo '<div class="alert alert-warning">Customer email not found. Email notification not sent.</div>';
         }
 
-        // Redirect to sgroomingdetail.php after successful update
-        header('Location: sgroomingdetail.php');
+        // Redirect to sboardingdetail.php after successful update
+        header('Location: sboardingdetail.php');
         exit();
     } else {
         echo '<div class="alert alert-danger">Failed to update booking.</div>';
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
         <div class="container px-4 px-lg-5 mt-3">
             <div class="row">
                 <div class="col">
-                    <h1>Edit Booking</h1>
+                    <h1>Edit Boarding Booking</h1>
                 </div>
             </div>
 
@@ -119,26 +118,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
                     $row = $result->fetch_assoc();
 
                     // Display edit form
-                    echo '<form action="seditbooking.php" method="post">';
+                    echo '<form action="sboardingedit.php" method="post">';
                     echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
 
-                    // Display fields for editing (e.g., date, remarks)
+                    // Display fields for editing (e.g., drop-off date, remarks)
                     // Example: Drop-Off Date
                     echo '<div class="form-group">';
                     echo '<label for="dropoff_date">Drop-Off Date:</label>';
                     echo '<input type="date" class="form-control form-control-small" id="dropoff_date" name="dropoff_date" value="' . htmlspecialchars($row['DropOffDate']) . '" required>';
                     echo '</div>';
 
-                    // Add reason for changing the date
+                    // Add reason for changing the drop-off date
                     echo '<div class="form-group">';
                     echo '<label for="reason">Reason:</label>';
-                    echo '<input type="text" class="form-control " id="reason" name="reason" placeholder="Enter reason for changing the date" required>';
+                    echo '<input type="text" class="form-control" id="reason" name="reason" placeholder="Enter reason for changing the date" required>';
                     echo '</div>';
 
-                    // Continue with other fields as needed (Pick-Up Date, Remarks, etc.)
+                    // Continue with other fields as needed (e.g., pick-up date, food, remarks)
 
                     echo '<button type="submit" class="btn btn-primary">Update Booking</button>';
-                    echo '<a href="sgroomingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
+                    echo '<a href="sboardingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
                     echo '</form>';
                 } else {
                     echo '<div class="alert alert-warning">Booking not found.</div>';

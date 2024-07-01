@@ -3,8 +3,9 @@
 include "db_connect.php";
 
 // Include PHPMailer library
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use PHPMailer\PHPMailer\PHPMailer as PHPMailer;
+use PHPMailer\PHPMailer\SMTP as PHPMailerSMTP;
 
 require 'C:\xampp\PHPMailer-master\src\Exception.php';
 require 'C:\xampp\PHPMailer-master\src\PHPMailer.php';
@@ -55,19 +56,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
                 // Content
                 $mail->isHTML(false);
                 $mail->Subject = 'Booking Rejection Notification';
-                $mail->Body    = "Dear $customer_name,\n\nYour booking has been rejected for the following reason:\n\n$reason\n\nPlease contact us for further assistance.";
+                $mail->Body    = "Dear $customer_name,\n\nYour boarding booking has been rejected for the following reason:\n\n$reason\n\nPlease contact us for further assistance.";
 
                 $mail->send();
                 echo '<div class="alert alert-success">Booking rejected successfully. Email notification sent.</div>';
-            } catch (Exception $e) {
+            } catch (PHPMailerException $e) {
                 echo '<div class="alert alert-danger">Booking rejected successfully. Failed to send email notification. Error: ' . htmlspecialchars($mail->ErrorInfo) . '</div>';
             }
         } else {
             echo '<div class="alert alert-warning">Customer email not found. Email notification not sent.</div>';
         }
 
-        // Redirect back to the grooming details page after rejection
-        header('Location: sgroomingdetail.php');
+        // Redirect back to the boarding details page after rejection
+        header('Location: sboardingdetail.php');
         exit();
     } else {
         echo '<div class="alert alert-danger">Failed to reject booking.</div>';

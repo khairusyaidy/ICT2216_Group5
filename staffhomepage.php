@@ -96,11 +96,11 @@
 
             <main>
                 <div class="dashboard">
-                    <a href="sbookingdetails.php?serviceId=1" class="dashboard-box">
+                    <a href="sboardingdetail.php?serviceId=1" class="dashboard-box">
                         <h2>Boarding</h2>
                         <p><?php echo $boardingCount; ?> bookings</p>
                     </a>
-                    <a href="sbookingdetails.php?serviceId=2" class="dashboard-box">
+                    <a href="sdaycaredetail.php?serviceId=2" class="dashboard-box">
                         <h2>Daycare</h2>
                         <p><?php echo $daycareCount; ?> bookings</p>
                     </a>
@@ -108,7 +108,7 @@
                         <h2>Grooming</h2>
                         <p><?php echo $groomingCount; ?> bookings</p>
                     </a>
-                    <a href="sbookingdetails.php?serviceId=0" class="dashboard-box">
+                    <a href="stodaybooking.php?serviceId=0" class="dashboard-box">
                         <h2>Total Services</h2>
                         <p><?php echo $totalCount; ?> bookings</p>
                     </a>
