@@ -37,7 +37,7 @@ if ($result->num_rows == 1) {
             echo "<script>alert('For services other than Boarding, the drop-off date and pick-up date must be the same.');</script>";
         } else {
             // Update the booking in the database
-            $update_sql = "UPDATE booking SET DropOffDate = '$dropoff_date', PickUpDate = '$pickup_date', Food = '$food', Remarks = '$comments' WHERE ID = '$booking_id'";
+            $update_sql = "UPDATE booking SET DropOffDate = '$dropoff_date', PickUpDate = '$pickup_date', Food = '$food', Remarks = '$comments', Status = 'Modified' WHERE ID = '$booking_id'";
 
             if ($conn->query($update_sql) === TRUE) {
                 // Redirect to my bookings page or show a success message

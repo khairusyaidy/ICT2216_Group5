@@ -14,7 +14,7 @@ if (isset($_SESSION['booking_id']) && isset($_SESSION['total_price'])) {
     // If the "Done" button is clicked
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['pay'])) {
         // Update the Paid status to 1 for this booking ID
-        $update_sql = "UPDATE booking SET Paid = 1 WHERE ID = '$booking_id'";
+        $update_sql = "UPDATE booking SET Paid = 1, Status = 'Accepted' WHERE ID = '$booking_id'";
 
         if ($conn->query($update_sql) === TRUE) {
             // Redirect to booking summary page
