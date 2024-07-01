@@ -1,4 +1,67 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+// Ensure session is started
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    require_once 'db_connect.php';
+
+// Retrieve CustomerID from session
+    if (!isset($_SESSION['id'])) {
+        die("Customer ID not found in session.");
+    }
+    $customerID = $_SESSION['id'];
+
+// Check if booking ID is provided
+    if (isset($_POST['booking_id'])) {
+        $bookingID = $_POST['booking_id'];
+
+// Fetch booking information to check if it belongs to the current customer (for security)
+        $stmt = $conn->prepare("SELECT CustomerID, DropOffDate FROM booking WHERE ID = ?");
+        $stmt->bind_param("i", $bookingID);
+        $stmt->execute();
+        $stmt->bind_result($bookingCustomerID, $dropOffDate);
+        $stmt->fetch();
+        $stmt->close();
+
+// Check if the booking exists and belongs to the current customer
+        if ($bookingCustomerID == $customerID) {
+// Check if it's allowed to delete (if drop-off date is at least 2 days from today)
+            $today = date('Y-m-d');
+            $dropOff = new DateTime($dropOffDate);
+            $todayObj = new DateTime($today);
+            $interval = $todayObj->diff($dropOff);
+            $daysDifference = $interval->format('%a');
+
+            if ($daysDifference < 2) {
+                echo json_encode(["success" => false, "message" => "Not allowed to cancel booking less than 2 days from drop-off date."]);
+                exit();
+            }
+
+// Proceed with deletion
+            $stmt = $conn->prepare("DELETE FROM booking WHERE ID = ?");
+            $stmt->bind_param("i", $bookingID);
+
+            if ($stmt->execute()) {
+                echo json_encode(["success" => true]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Failed to delete booking."]);
+            }
+
+            $stmt->close();
+        } else {
+            echo json_encode(["success" => false, "message" => "Unauthorized action. This booking does not belong to you."]);
+        }
+    } else {
+        echo json_encode(["success" => false, "message" => "No booking ID provided."]);
+    }
+
+    $conn->close();
+    exit(); // Terminate script execution after handling AJAX request
+}
+
+//For fetching bookings
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -74,8 +137,8 @@ $conn->close();
                                     <p class="card-text"><b>Total Price:</b> $<?php echo htmlspecialchars($booking['TotalPrice']); ?></p>
 
                                     <div class="d-flex justify-content-end">
-                                        <a href="edit_booking.php?booking_id=<?php echo $booking['ID']; ?>" class="mr-2"><i class="fas fa-edit"></i></a>
-                                        <a href="delete_booking.php?booking_id=<?php echo $booking['ID']; ?>"><i class="fas fa-trash-alt"></i></a>
+                                        <a href="#" class="mr-2" onclick="checkEditDateAndProceed('<?php echo $booking['DropOffDate']; ?>', 'edit_booking.php?booking_id=<?php echo $booking['ID']; ?>')"><i class="fas fa-edit"></i></a>
+                                        <a href="#" onclick="checkDeleteDateAndProceed('<?php echo $booking['DropOffDate']; ?>', '<?php echo $booking['ID']; ?>')"><i class="fas fa-trash-alt"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -101,6 +164,10 @@ $conn->close();
                                     <p class="card-text"><b>Food:</b> <?php echo $booking['Food'] ? 'Yes' : 'No'; ?></p>
                                     <p class="card-text"><b>Remarks:</b> <?php echo htmlspecialchars($booking['Remarks']); ?></p>
                                     <p class="card-text"><b>Total Price:</b> $<?php echo htmlspecialchars($booking['TotalPrice']); ?></p>
+
+                                    <div class="col text-center mb-4">
+                                        <button onclick="window.location.href = 'addreview.php?booking_id=<?php echo $booking['ID']; ?>'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Review</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -112,11 +179,6 @@ $conn->close();
         </div>
 
         <br>
-
-        <div class="col text-center mb-4">
-            <button onclick="window.location.href = 'addreview.php'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Review</button>
-        </div>
-
 
 
         <!-- Footer Start -->
@@ -142,7 +204,50 @@ $conn->close();
 
         <!-- Custom JavaScript -->
         <script>
-                // Custom JavaScript can be added here
+                                            function checkEditDateAndProceed(dropOffDate, url) {
+                                                const today = new Date();
+                                                const dropOff = new Date(dropOffDate);
+                                                const timeDifference = dropOff.getTime() - today.getTime();
+                                                const dayDifference = timeDifference / (1000 * 3600 * 24);
+
+                                                if (dayDifference < 2) {
+                                                    alert("Not allowed to modify booking.");
+                                                } else {
+                                                    window.location.href = url;
+                                                }
+                                            }
+
+                                            function checkDeleteDateAndProceed(dropOffDate, bookingId) {
+                                                const today = new Date();
+                                                const dropOff = new Date(dropOffDate);
+                                                const timeDifference = dropOff.getTime() - today.getTime();
+                                                const dayDifference = timeDifference / (1000 * 3600 * 24);
+
+                                                if (dayDifference < 2) {
+                                                    alert("Not allowed to cancel booking.");
+                                                } else {
+                                                    if (confirm("Are you sure you want to delete this booking?")) {
+                                                        // AJAX request to delete the booking
+                                                        const xhr = new XMLHttpRequest();
+                                                        xhr.open("POST", "", true); // Send request to the same file
+                                                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                                        xhr.onreadystatechange = function () {
+                                                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                                                                const response = JSON.parse(xhr.responseText);
+                                                                if (response.success) {
+                                                                    // Remove the booking card from the UI immediately
+                                                                    const card = element.closest('.card');
+                                                                    card.parentNode.removeChild(card);
+                                                                } else {
+                                                                    alert("Failed to delete booking.");
+                                                                }
+                                                            }
+                                                        };
+                                                        xhr.send("action=delete&booking_id=" + bookingId);
+                                                        location.reload();
+                                                    }
+                                                }
+                                            }
         </script>
     </body>
 </html>
