@@ -18,7 +18,7 @@ if (!isset($_SESSION['id'])) {
 $customerID = $_SESSION['id'];
 
 // Fetch booking details for the specific booking_id and customerID
-$sql = "SELECT * FROM booking WHERE ID = '$booking_id' AND CustomerID = '$customerID'";
+$sql = "SELECT b.*, s.ServiceName FROM booking b JOIN service s ON b.ServiceID = s.ID WHERE b.ID = '$booking_id' AND b.CustomerID = '$customerID'";
 $result = $conn->query($sql);
 
 if ($result->num_rows == 1) {
@@ -30,18 +30,22 @@ if ($result->num_rows == 1) {
         // Get updated form data
         $dropoff_date = $conn->real_escape_string($_POST['boarding_dropoffdate']);
         $pickup_date = $conn->real_escape_string($_POST['boarding_pickupdate']);
-        $food = isset($_POST['yes']) ? 1 : 0;
+        $food = isset($_POST['food']) && $_POST['food'] === 'Yes' ? 1 : 0;
         $comments = $conn->real_escape_string($_POST['comments']);
 
-        // Update the booking in the database
-        $update_sql = "UPDATE booking SET DropOffDate = '$dropoff_date', PickUpDate = '$pickup_date', Food = '$food', Remarks = '$comments' WHERE ID = '$booking_id'";
-
-        if ($conn->query($update_sql) === TRUE) {
-            // Redirect to my bookings page or show a success message
-            header('Location: mybookings.php');
-            exit;
+        if ($booking['ServiceName'] !== 'Boarding' && $dropoff_date !== $pickup_date) {
+            echo "<script>alert('For services other than Boarding, the drop-off date and pick-up date must be the same.');</script>";
         } else {
-            echo "Error updating booking: " . $conn->error;
+            // Update the booking in the database
+            $update_sql = "UPDATE booking SET DropOffDate = '$dropoff_date', PickUpDate = '$pickup_date', Food = '$food', Remarks = '$comments' WHERE ID = '$booking_id'";
+
+            if ($conn->query($update_sql) === TRUE) {
+                // Redirect to my bookings page or show a success message
+                header('Location: mybookings.php');
+                exit;
+            } else {
+                echo "Error updating booking: " . $conn->error;
+            }
         }
     }
 } else {
