@@ -36,12 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $food = $conn->real_escape_string($food);
     $comments = $conn->real_escape_string($comments);
 
+    // Convert dates to DateTime objects
+    $dropoffDate = new DateTime($dropoff_date);
+    $pickupDate = new DateTime($pickup_date);
+
+    // Calculate the difference in days
+    $dateDifference = $dropoffDate->diff($pickupDate)->days;
+
     // Fetch additional data from related tables
     $service_query = "SELECT ID, Price FROM service WHERE ServiceName = 'boarding'";
     $service_result = $conn->query($service_query);
     $service = $service_result->fetch_assoc();
     $service_id = $service['ID'];
-    $total_price = $service['Price'];
+    $service_price = $service['Price'];
+    
+    $total_price = $dateDifference * $service_price;
 
     // Fetch PetWeight
     $pet_query = "SELECT Weight FROM pet WHERE ID = '$pet_id'";
