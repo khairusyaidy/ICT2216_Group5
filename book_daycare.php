@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Navbar End -->
 
         <div id="booking_successful_container">
+            <br>
             <h2>Please complete below form to book</h2>
 
             <form method="post" action="">
