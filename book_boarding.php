@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $service = $service_result->fetch_assoc();
     $service_id = $service['ID'];
     $service_price = $service['Price'];
-    
+
     $total_price = $dateDifference * $service_price;
 
     // Fetch PetWeight
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <h2>Please complete below form to book</h2>
 
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="return validateDates()">
                 <p><b>Select a pet:</b></p>
 
                 <?php foreach ($pet_name as $pname): ?>
@@ -182,6 +182,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+
+        <script>
+                function validateDates() {
+                    const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
+                    const pickupDate = new Date(document.getElementById('boarding_pickupdate').value);
+                    const today = new Date();
+
+                    if (dropoffDate < today) {
+                        alert('Drop-off date cannot be in the past.');
+                        return false;
+                    }
+
+                    if (pickupDate < today) {
+                        alert('Pick-up date cannot be in the past.');
+                        return false;
+                    }
+
+                    if (pickupDate <= dropoffDate) {
+                        alert('Pick-up date must be after the drop-off date.');
+                        return false;
+                    }
+
+                    return true;
+                }
+        </script>
     </body>
 
 </html>

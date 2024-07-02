@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <h2>Please complete below form to book</h2>
 
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="return validateDates()">
 
                 <p><b>Select a pet:</b></p>
 
@@ -184,6 +184,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $('#selected_service_price').val(servicePrice);
                 });
             });
+            
+            function validateDates() {
+                    const getDate = new Date(document.getElementById('grooming_date').value);
+                    const today = new Date();
+
+                    if (getDate < today) {
+                        alert('Date cannot be in the past.');
+                        return false;
+                    }
+
+                    return true;
+                }
         </script>
     </body>
 

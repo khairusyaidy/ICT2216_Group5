@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pet_result = $conn->query($pet_query);
     $pet = $pet_result->fetch_assoc();
     $pet_weight = $pet['Weight'];
-    
+
     // It will be same as Drop-off date
     $pickup_date = $dropoff_date;
 
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <br>
             <h2>Please complete below form to book</h2>
 
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="return validateDates()">
                 <p><b>Select a pet:</b></p>
 
                 <?php foreach ($pet_name as $pname): ?>
@@ -169,6 +169,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+
+        <script>
+
+                function validateDates() {
+                    const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
+                    const today = new Date();
+
+                    if (dropoffDate < today) {
+                        alert('Drop-off date cannot be in the past.');
+                        return false;
+                    }
+
+                    return true;
+                }
+
+        </script>
     </body>
 
 </html>
