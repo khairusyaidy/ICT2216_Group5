@@ -62,7 +62,7 @@
         </div>
         <div class="row">
                 <div class="col text-center mb-4">
-                    <button onclick="window.location.href='book_daycare.php'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
+                    <button onclick="window.location.href='<?php echo isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true ? 'book_daycare.php' : 'login.php'; ?>'" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Book Now</button>
                 </div>
             </div>
     </div>
