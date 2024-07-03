@@ -19,53 +19,55 @@ while ($row = $result->fetch_assoc()) {
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Re-establish the connection
-    require_once 'db_connect.php';
+    if (isset($_POST['pet'], $_POST['grooming_date'], $_POST['selected_service_name'], $_POST['selected_service_price'])) {
+        // Re-establish the connection
+        require_once 'db_connect.php';
 
-    // Get the form data
-    $pet_id = $_POST['pet'];
-    $grooming_date = $_POST['grooming_date'];
-    $selected_service_name = $_POST['selected_service_name'];
-    $selected_service_price = $_POST['selected_service_price'];
+        // Get the form data
+        $pet_id = $_POST['pet'];
+        $grooming_date = $_POST['grooming_date'];
+        $selected_service_name = $_POST['selected_service_name'];
+        $selected_service_price = $_POST['selected_service_price'];
 
-    $stmt = $conn->prepare("SELECT ID FROM service WHERE ServiceName = ?");
-    $stmt->bind_param("s", $selected_service_name);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $service = $result->fetch_assoc();
-    $service_id = $service['ID'];
+        $stmt = $conn->prepare("SELECT ID FROM service WHERE ServiceName = ?");
+        $stmt->bind_param("s", $selected_service_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $service = $result->fetch_assoc();
+        $service_id = $service['ID'];
 
-    // Fetch PetWeight
-    $pet_query = "SELECT Weight FROM pet WHERE ID = '$pet_id'";
-    $pet_result = $conn->query($pet_query);
-    $pet = $pet_result->fetch_assoc();
-    $pet_weight = $pet['Weight'];
+        // Fetch PetWeight
+        $pet_query = "SELECT Weight FROM pet WHERE ID = '$pet_id'";
+        $pet_result = $conn->query($pet_query);
+        $pet = $pet_result->fetch_assoc();
+        $pet_weight = $pet['Weight'];
 
-    // Insert data into the booking table
-    $sql = "INSERT INTO booking (DropOffDate, PickUpDate, Food, Remarks, TotalPrice, Paid, ServiceID, CustomerID, PetID, PetWeight, ReviewID) 
+        // Insert data into the booking table
+        $sql = "INSERT INTO booking (DropOffDate, PickUpDate, Food, Remarks, TotalPrice, Paid, ServiceID, CustomerID, PetID, PetWeight, ReviewID) 
             VALUES ('$grooming_date', '$grooming_date', 0, 'Nil', '$selected_service_price', 0, '$service_id', '$customerID', '$pet_id', '$pet_weight', NULL)";
 
-    if ($conn->query($sql) === TRUE) {
-        // Retrieve the auto-generated ID of the inserted record
-        $booking_id = $conn->insert_id; // This will give you the ID of the inserted booking
-        // Retrieve TotalPrice for the booking ID
-        $get_price_sql = "SELECT TotalPrice FROM booking WHERE ID = '$booking_id'";
-        $result = $conn->query($get_price_sql);
-        $row = $result->fetch_assoc();
-        $total_price = $row['TotalPrice'];
+        if ($conn->query($sql) === TRUE) {
+            // Retrieve the auto-generated ID of the inserted record
+            $booking_id = $conn->insert_id; // This will give you the ID of the inserted booking
+            // Retrieve TotalPrice for the booking ID
+            $get_price_sql = "SELECT TotalPrice FROM booking WHERE ID = '$booking_id'";
+            $result = $conn->query($get_price_sql);
+            $row = $result->fetch_assoc();
+            $total_price = $row['TotalPrice'];
 
-        // Store booking ID and TotalPrice in session (for example)
-        $_SESSION['booking_id'] = $booking_id;
-        $_SESSION['total_price'] = $total_price;
+            // Store booking ID and TotalPrice in session (for example)
+            $_SESSION['booking_id'] = $booking_id;
+            $_SESSION['total_price'] = $total_price;
 
-        // Redirect to the payment page or display a success message
-        header('Location: payment_method.php');
-        exit;
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+            // Redirect to the payment page or display a success message
+            header('Location: payment_method.php');
+            exit;
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+        //Close the connection
+        $conn->close();
     }
-    //Close the connection
-    $conn->close();
 }
 
 ////Close the connection
@@ -161,31 +163,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <script src="js/main.js"></script>
 
         <script>
-            $(document).ready(function () {
-                $('input[name="pet"]').on('change', function () {
-                    var petID = $(this).val();
-                    $.ajax({
-                        url: 'fetch_services.php',
-                        type: 'POST',
-                        data: {petID: petID},
-                        success: function (response) {
-                            $('#services_container').html(response);
-                        }
+                $(document).ready(function () {
+                    $('input[name="pet"]').on('change', function () {
+                        var petID = $(this).val();
+                        $.ajax({
+                            url: 'fetch_services.php',
+                            type: 'POST',
+                            data: {petID: petID},
+                            success: function (response) {
+                                $('#services_container').html(response);
+                            }
+                        });
+                    });
+
+                    // Handle service selection
+                    $(document).on('change', 'input[name="service"]', function () {
+                        var serviceName = $(this).data('name');
+                        var servicePrice = $(this).data('price');
+
+                        // Set the selected service values to hidden input fields or store in JavaScript variables
+                        $('#selected_service_name').val(serviceName);
+                        $('#selected_service_price').val(servicePrice);
                     });
                 });
 
-                // Handle service selection
-                $(document).on('change', 'input[name="service"]', function () {
-                    var serviceName = $(this).data('name');
-                    var servicePrice = $(this).data('price');
-
-                    // Set the selected service values to hidden input fields or store in JavaScript variables
-                    $('#selected_service_name').val(serviceName);
-                    $('#selected_service_price').val(servicePrice);
-                });
-            });
-            
-            function validateDates() {
+                function validateDates() {
                     const getDate = new Date(document.getElementById('grooming_date').value);
                     const today = new Date();
 
