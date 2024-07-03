@@ -212,7 +212,7 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
-                <span class="error-message"><?php echo $password_err; ?></span>
+                <span class="error-message" id="password-err"><?php echo $password_err; ?></span>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Confirm Password:</label>
@@ -221,28 +221,27 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="pet-info-section">
             <h2>Pet Info</h2>
-            <div class="pet-info" id="pet-info-1">
+            <div id="pet-info-1" class="pet-info">
                 <div class="form-group">
                     <label for="pet-name-1">Pet Name:</label>
                     <input type="text" id="pet-name-1" name="pet-name-1" required>
                 </div>
                 <div class="form-group">
-                    <label for="pet-age-1">Age:</label>
-                    <input type="text" id="pet-age-1" name="pet-age-1" pattern="[0-9]*" title="Age must be numeric" required>
+                    <label for="pet-age-1">Pet Age:</label>
+                    <input type="number" id="pet-age-1" name="pet-age-1" required>
                 </div>
                 <div class="form-group">
-                    <label for="pet-breed-1">Breed:</label>
+                    <label for="pet-breed-1">Pet Breed:</label>
                     <input type="text" id="pet-breed-1" name="pet-breed-1" required>
                 </div>
                 <div class="form-group">
-                    <label for="pet-weight-1">Weight:</label>
+                    <label for="pet-weight-1">Pet Weight:</label>
                     <select id="pet-weight-1" name="pet-weight-1" required>
-                        <option value="">Select Weight</option>
-                        <option value="<5kg">&lt;5kg</option>
-                        <option value="<10kg">&lt;10kg</option>
-                        <option value="<15kg">&lt;15kg</option>
+                        <option value="<5kg"><5kg</option>
+                        <option value="<10kg"><10kg</option>
+                        <option value="<15kg"><15kg</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -250,15 +249,15 @@
                     <input type="text" id="pet-coat-1" name="pet-coat-1" required>
                 </div>
                 <div class="form-group">
-                    <label for="pet-gender-1">Gender:</label>
+                    <label for="pet-gender-1">Pet Gender:</label>
                     <select id="pet-gender-1" name="pet-gender-1" required>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="pet-behaviour-1">Behaviour:</label>
-                    <textarea id="pet-behaviour-1" name="pet-behaviour-1" rows="3" required></textarea>
+                    <label for="pet-behaviour-1">Pet Behaviour:</label>
+                    <textarea id="pet-behaviour-1" name="pet-behaviour-1" required></textarea>
                 </div>
             </div>
         </div>
@@ -269,134 +268,81 @@
 
         <div class="buttons">
             <button type="submit">Sign Up</button>
-            <a href="login.php">Already have an account? Sign In</a>
+            <a href="login.php">Already have an account? Login here</a>
         </div>
     </form>
 </div>
 
 <script>
-    var petCount = 1;
+    let petCounter = 1;
 
     function addPetInfo() {
-        petCount++;
-        var petInfo = document.createElement('div');
-        petInfo.className = 'pet-info';
-        petInfo.id = 'pet-info-' + petCount;
-        petInfo.innerHTML = `
+        petCounter++;
+        const petInfoSection = document.getElementById('pet-info-section');
+        const newPetInfo = document.createElement('div');
+        newPetInfo.className = 'pet-info';
+        newPetInfo.id = 'pet-info-' + petCounter;
+        newPetInfo.innerHTML = `
+            <h3>Pet ${petCounter} Info</h3>
             <div class="form-group">
-                <label for="pet-name-${petCount}">Pet Name:</label>
-                <input type="text" id="pet-name-${petCount}" name="pet-name-${petCount}" required>
+                <label for="pet-name-${petCounter}">Pet Name:</label>
+                <input type="text" id="pet-name-${petCounter}" name="pet-name-${petCounter}" required>
             </div>
             <div class="form-group">
-                <label for="pet-age-${petCount}">Age:</label>
-                <input type="text" id="pet-age-${petCount}" name="pet-age-${petCount}" pattern="[0-9]*" title="Age must be numeric" required>
+                <label for="pet-age-${petCounter}">Pet Age:</label>
+                <input type="number" id="pet-age-${petCounter}" name="pet-age-${petCounter}" required>
             </div>
             <div class="form-group">
-                <label for="pet-breed-${petCount}">Breed:</label>
-                <input type="text" id="pet-breed-${petCount}" name="pet-breed-${petCount}" required>
+                <label for="pet-breed-${petCounter}">Pet Breed:</label>
+                <input type="text" id="pet-breed-${petCounter}" name="pet-breed-${petCounter}" required>
             </div>
             <div class="form-group">
-                <label for="pet-weight-${petCount}">Weight:</label>
-                <select id="pet-weight-${petCount}" name="pet-weight-${petCount}" required>
-                    <option value="">Select Weight</option>
-                    <option value="<5kg">&lt;5kg</option>
-                    <option value="<10kg">&lt;10kg</option>
-                    <option value="<15kg">&lt;15kg</option>
+                <label for="pet-weight-${petCounter}">Pet Weight:</label>
+                <select id="pet-weight-${petCounter}" name="pet-weight-${petCounter}" required>
+                    <option value="<5kg"><5kg</option>
+                    <option value="<10kg"><10kg</option>
+                    <option value="<15kg"><15kg</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="pet-coat-${petCount}">Coat Type:</label>
-                <input type="text" id="pet-coat-${petCount}" name="pet-coat-${petCount}" required>
+                <label for="pet-coat-${petCounter}">Coat Type:</label>
+                <input type="text" id="pet-coat-${petCounter}" name="pet-coat-${petCounter}" required>
             </div>
             <div class="form-group">
-                <label for="pet-gender-${petCount}">Gender:</label>
-                <select id="pet-gender-${petCount}" name="pet-gender-${petCount}" required>
+                <label for="pet-gender-${petCounter}">Pet Gender:</label>
+                <select id="pet-gender-${petCounter}" name="pet-gender-${petCounter}" required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="pet-behaviour-${petCount}">Behaviour:</label>
-                <textarea id="pet-behaviour-${petCount}" name="pet-behaviour-${petCount}" rows="3" required></textarea>
+                <label for="pet-behaviour-${petCounter}">Pet Behaviour:</label>
+                <textarea id="pet-behaviour-${petCounter}" name="pet-behaviour-${petCounter}" required></textarea>
             </div>
         `;
-        document.getElementById('signup-form').appendChild(petInfo);
+        petInfoSection.appendChild(newPetInfo);
     }
 
     function validateForm() {
-        var isValid = true;
-
-        // Validate Phone No.
-        var phoneInput = document.getElementById('phone');
-        if (!/^[0-9]{8}$/.test(phoneInput.value)) {
-            displayError(phoneInput, "Phone number must be 8 digits.");
-            isValid = false;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const passwordErr = document.getElementById('password-err');
+        
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+        
+        if (!passwordRegex.test(password)) {
+            passwordErr.textContent = "Password must be at least 6 characters, with at least one uppercase and one lowercase letter.";
+            return false;
         } else {
-            clearError(phoneInput);
+            passwordErr.textContent = "";
         }
-
-        // Validate Email
-        var emailInput = document.getElementById('email');
-        if (!/^\S+@\S+\.\S+$/.test(emailInput.value)) {
-            displayError(emailInput, "Invalid email format.");
-            isValid = false;
-        } else {
-            clearError(emailInput);
+        
+        if (password !== confirmPassword) {
+            passwordErr.textContent = "Passwords do not match.";
+            return false;
         }
-
-        // Validate Password
-        var passwordInput = document.getElementById('password');
-        var confirmPasswordInput = document.getElementById('confirm-password');
-        if (passwordInput.value !== confirmPasswordInput.value) {
-            displayError(confirmPasswordInput, "Passwords do not match.");
-            isValid = false;
-        } else {
-            clearError(confirmPasswordInput);
-        }
-
-
-        // Validate Pet Ages
-        var petAgeInputs = document.querySelectorAll('[id^="pet-age-"]');
-        petAgeInputs.forEach(function(input) {
-            if (!/^\d+$/.test(input.value)) {
-                displayError(input, "Age must be numeric.");
-                isValid = false;
-            } else {
-                clearError(input);
-            }
-        });
-    
-        // Validate Pet Weight (at least one pet must have a weight selected)
-        var petWeightInputs = document.querySelectorAll('[id^="pet-weight-"]');
-        var hasValidPetWeight = Array.from(petWeightInputs).some(function(input) {
-            return input.value !== "";
-        });
-
-        if (!hasValidPetWeight) {
-            var firstPetWeightInput = document.getElementById('pet-weight-1');
-            displayError(firstPetWeightInput, "Please select pet weight.");
-            isValid = false;
-        } else {
-            Array.from(petWeightInputs).forEach(function(input) {
-                clearError(input);
-            });
-        }
-
-        return isValid;
-    }
-
-    function displayError(element, message) {
-        var errorMessageElement = document.createElement('span');
-        errorMessageElement.className = 'error-message';
-        errorMessageElement.textContent = message;
-        element.parentNode.appendChild(errorMessageElement);
-    }
-
-    function clearError(element) {
-        var errorMessageElement = element.parentNode.querySelector('.error-message');
-        if (errorMessageElement) {
-            errorMessageElement.remove();
-        }
+        
+        return true;
     }
 </script>
 
