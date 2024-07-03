@@ -19,62 +19,64 @@ while ($row = $result->fetch_assoc()) {
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Re-establish the connection
-    require_once 'db_connect.php';
+    if (isset($_POST['pet'], $_POST['boarding_dropoffdate'], $_POST['food'], $_POST['comments'])) {
+        // Re-establish the connection
+        require_once 'db_connect.php';
 
-    // Get the form data
-    $pet_id = $_POST['pet'];
-    $dropoff_date = $_POST['boarding_dropoffdate'];
-    $food = isset($_POST['food']) && $_POST['food'] == 'Yes' ? 1 : 0;
-    $comments = $_POST['comments'];
+        // Get the form data
+        $pet_id = $_POST['pet'];
+        $dropoff_date = $_POST['boarding_dropoffdate'];
+        $food = isset($_POST['food']) && $_POST['food'] == 'Yes' ? 1 : 0;
+        $comments = $_POST['comments'];
 
-    // Validate and sanitize input data
-    $pet_id = $conn->real_escape_string($pet_id);
-    $dropoff_date = $conn->real_escape_string($dropoff_date);
-    $food = $conn->real_escape_string($food);
-    $comments = $conn->real_escape_string($comments);
+        // Validate and sanitize input data
+        $pet_id = $conn->real_escape_string($pet_id);
+        $dropoff_date = $conn->real_escape_string($dropoff_date);
+        $food = $conn->real_escape_string($food);
+        $comments = $conn->real_escape_string($comments);
 
-    // Fetch additional data from related tables
-    $service_query = "SELECT ID, Price FROM service WHERE ServiceName = 'Daycare'";
-    $service_result = $conn->query($service_query);
-    $service = $service_result->fetch_assoc();
-    $service_id = $service['ID'];
-    $total_price = $service['Price'];
+        // Fetch additional data from related tables
+        $service_query = "SELECT ID, Price FROM service WHERE ServiceName = 'Daycare'";
+        $service_result = $conn->query($service_query);
+        $service = $service_result->fetch_assoc();
+        $service_id = $service['ID'];
+        $total_price = $service['Price'];
 
-    // Fetch PetWeight
-    $pet_query = "SELECT Weight FROM pet WHERE ID = '$pet_id'";
-    $pet_result = $conn->query($pet_query);
-    $pet = $pet_result->fetch_assoc();
-    $pet_weight = $pet['Weight'];
-    
-    // It will be same as Drop-off date
-    $pickup_date = $dropoff_date;
+        // Fetch PetWeight
+        $pet_query = "SELECT Weight FROM pet WHERE ID = '$pet_id'";
+        $pet_result = $conn->query($pet_query);
+        $pet = $pet_result->fetch_assoc();
+        $pet_weight = $pet['Weight'];
 
-    // Insert data into the booking table
-    $sql = "INSERT INTO booking (DropOffDate, PickUpDate, Food, Remarks, TotalPrice, Paid, ServiceID, CustomerID, PetID, PetWeight, ReviewID) 
+        // It will be same as Drop-off date
+        $pickup_date = $dropoff_date;
+
+        // Insert data into the booking table
+        $sql = "INSERT INTO booking (DropOffDate, PickUpDate, Food, Remarks, TotalPrice, Paid, ServiceID, CustomerID, PetID, PetWeight, ReviewID) 
             VALUES ('$dropoff_date', '$pickup_date', '$food', '$comments', '$total_price', 0, '$service_id', '$customerID', '$pet_id', '$pet_weight', NULL)";
 
-    if ($conn->query($sql) === TRUE) {
-        // Retrieve the auto-generated ID of the inserted record
-        $booking_id = $conn->insert_id; // This will give you the ID of the inserted booking
-        // Retrieve TotalPrice for the booking ID
-        $get_price_sql = "SELECT TotalPrice FROM booking WHERE ID = '$booking_id'";
-        $result = $conn->query($get_price_sql);
-        $row = $result->fetch_assoc();
-        $total_price = $row['TotalPrice'];
+        if ($conn->query($sql) === TRUE) {
+            // Retrieve the auto-generated ID of the inserted record
+            $booking_id = $conn->insert_id; // This will give you the ID of the inserted booking
+            // Retrieve TotalPrice for the booking ID
+            $get_price_sql = "SELECT TotalPrice FROM booking WHERE ID = '$booking_id'";
+            $result = $conn->query($get_price_sql);
+            $row = $result->fetch_assoc();
+            $total_price = $row['TotalPrice'];
 
-        // Store booking ID and TotalPrice in session (for example)
-        $_SESSION['booking_id'] = $booking_id;
-        $_SESSION['total_price'] = $total_price;
+            // Store booking ID and TotalPrice in session (for example)
+            $_SESSION['booking_id'] = $booking_id;
+            $_SESSION['total_price'] = $total_price;
 
-        // Redirect to the payment page or display a success message
-        header('Location: payment_method.php');
-        exit;
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+            // Redirect to the payment page or display a success message
+            header('Location: payment_method.php');
+            exit;
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+        //Close the connection
+        $conn->close();
     }
-    //Close the connection
-    $conn->close();
 }
 ?>
 
@@ -103,9 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Navbar End -->
 
         <div id="booking_successful_container">
+            <br>
             <h2>Please complete below form to book</h2>
 
-            <form method="post" action="">
+            <form method="post" action="" onsubmit="return validateDates()">
                 <p><b>Select a pet:</b></p>
 
                 <?php foreach ($pet_name as $pname): ?>
@@ -168,6 +171,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Template Javascript -->
         <script src="js/main.js"></script>
+
+        <script>
+
+                function validateDates() {
+                    const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
+                    const today = new Date();
+
+                    if (dropoffDate < today) {
+                        alert('Drop-off date cannot be in the past.');
+                        return false;
+                    }
+
+                    return true;
+                }
+
+        </script>
     </body>
 
 </html>
