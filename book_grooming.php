@@ -17,6 +17,14 @@ while ($row = $result->fetch_assoc()) {
     $pet_name[] = $row;
 }
 
+// Fetch unavailable date ranges
+$unavailable_dates = [];
+$availability_query = "SELECT StartDate, EndDate FROM availability WHERE Deleted_At IS NULL";
+$availability_result = $conn->query($availability_query);
+while ($row = $availability_result->fetch_assoc()) {
+    $unavailable_dates[] = $row;
+}
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['pet'], $_POST['grooming_date'], $_POST['selected_service_name'], $_POST['selected_service_price'])) {
@@ -82,6 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/book_grooming.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
 
     <body>
@@ -109,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php foreach ($pet_name as $pname): ?>
                     <div>
-                        <input type="radio" id="pet_<?php echo htmlspecialchars($pname['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>" data-weight="<?php echo htmlspecialchars($pname['Weight']); ?>">
+                        <input type="radio" id="pet_<?php echo htmlspecialchars($pname['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>" data-weight="<?php echo htmlspecialchars($pname['Weight']); ?>" required>
                         <label for="pet_<?php echo htmlspecialchars($pname['ID']); ?>"><?php echo htmlspecialchars($pname['Name']); ?></label>
                     </div>
                 <?php endforeach; ?>
@@ -121,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <br>
 
                 <label for="grooming_date"><b>Date:</b></label><br>
-                <input type="date" id="grooming_date" name="grooming_date">
+                <input type="date" id="grooming_date" name="grooming_date" class="flatpickr">
 
                 <!-- Hidden input fields to store selected service -->
                 <input type="hidden" id="selected_service_name" name="selected_service_name">
@@ -163,41 +173,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <script src="js/main.js"></script>
 
         <script>
-                $(document).ready(function () {
-                    $('input[name="pet"]').on('change', function () {
-                        var petID = $(this).val();
-                        $.ajax({
-                            url: 'fetch_services.php',
-                            type: 'POST',
-                            data: {petID: petID},
-                            success: function (response) {
-                                $('#services_container').html(response);
-                            }
-                        });
+            document.addEventListener('DOMContentLoaded', function () {
+                const unavailableDates = <?php echo json_encode($unavailable_dates); ?>;
+
+                function getDisabledDates(unavailableDates) {
+                    let disabledDates = [];
+                    unavailableDates.forEach(range => {
+                        let start = new Date(range.StartDate);
+                        let end = new Date(range.EndDate);
+                        while (start <= end) {
+                            disabledDates.push(start.toISOString().split('T')[0]);
+                            start.setDate(start.getDate() + 1);
+                        }
                     });
+                    return disabledDates;
+                }
 
-                    // Handle service selection
-                    $(document).on('change', 'input[name="service"]', function () {
-                        var serviceName = $(this).data('name');
-                        var servicePrice = $(this).data('price');
+                const disabledDates = getDisabledDates(unavailableDates);
 
-                        // Set the selected service values to hidden input fields or store in JavaScript variables
-                        $('#selected_service_name').val(serviceName);
-                        $('#selected_service_price').val(servicePrice);
+                flatpickr(".flatpickr", {
+                    disable: disabledDates,
+                    dateFormat: "Y-m-d",
+                    minDate: "today"
+                });
+            });
+
+            function validateDates() {
+
+                // Check if the date is not empty
+                if (!document.getElementById('grooming_date').value) {
+                    alert('Please ensure the date is selected.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            $(document).ready(function () {
+                $('input[name="pet"]').on('change', function () {
+                    var petID = $(this).val();
+                    $.ajax({
+                        url: 'fetch_services.php',
+                        type: 'POST',
+                        data: {petID: petID},
+                        success: function (response) {
+                            $('#services_container').html(response);
+                        }
                     });
                 });
 
-                function validateDates() {
-                    const getDate = new Date(document.getElementById('grooming_date').value);
-                    const today = new Date();
+                // Handle service selection
+                $(document).on('change', 'input[name="service"]', function () {
+                    var serviceName = $(this).data('name');
+                    var servicePrice = $(this).data('price');
 
-                    if (getDate < today) {
-                        alert('Date cannot be in the past.');
-                        return false;
-                    }
+                    // Set the selected service values to hidden input fields or store in JavaScript variables
+                    $('#selected_service_name').val(serviceName);
+                    $('#selected_service_price').val(servicePrice);
+                });
+            });
 
-                    return true;
-                }
         </script>
     </body>
 

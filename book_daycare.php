@@ -17,15 +17,23 @@ while ($row = $result->fetch_assoc()) {
     $pet_name[] = $row;
 }
 
+// Fetch unavailable date ranges
+$unavailable_dates = [];
+$availability_query = "SELECT StartDate, EndDate FROM availability WHERE Deleted_At IS NULL";
+$availability_result = $conn->query($availability_query);
+while ($row = $availability_result->fetch_assoc()) {
+    $unavailable_dates[] = $row;
+}
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['pet'], $_POST['boarding_dropoffdate'], $_POST['food'], $_POST['comments'])) {
+    if (isset($_POST['pet'], $_POST['daycare_dropoffdate'], $_POST['food'], $_POST['comments'])) {
         // Re-establish the connection
         require_once 'db_connect.php';
 
         // Get the form data
         $pet_id = $_POST['pet'];
-        $dropoff_date = $_POST['boarding_dropoffdate'];
+        $dropoff_date = $_POST['daycare_dropoffdate'];
         $food = isset($_POST['food']) && $_POST['food'] == 'Yes' ? 1 : 0;
         $comments = $_POST['comments'];
 
@@ -88,6 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/book_daycare.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
 
     <body>
@@ -113,24 +123,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php foreach ($pet_name as $pname): ?>
                     <div>
-                        <input type="radio" id="pet_<?php echo htmlspecialchars($pet['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>">
+                        <input type="radio" id="pet_<?php echo htmlspecialchars($pet['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>" required>
                         <label for="pet_<?php echo htmlspecialchars($pet['ID']); ?>"><?php echo htmlspecialchars($pname['Name']); ?></label>
                     </div>
                 <?php endforeach; ?>
 
                 <br>
 
-                <label for="boarding_dropoffdate"><b>Drop-off Date:</b></label><br>
-                <input type="date" id="boarding_dropoffdate" name="boarding_dropoffdate">
+                <label for="daycare_dropoffdate"><b>Drop-off Date:</b></label><br>
+                <input type="date" id="daycare_dropoffdate" name="daycare_dropoffdate" class="flatpickr">
 
                 <br><br>
 
                 <p><b>Complementary Food:</b></p>
 
-                <input type="radio" id="yes" name="food" value="Yes">
+                <input type="radio" id="yes" name="food" value="Yes" required>
                 <label for="yes">Yes</label><br>
 
-                <input type="radio" id="no" name="food" value="No">
+                <input type="radio" id="no" name="food" value="No" required>
                 <label for="no">No</label><br>
 
                 <p><b>Allergy / Comments /Remarks:</b></p>
@@ -173,13 +183,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <script src="js/main.js"></script>
 
         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const unavailableDates = <?php echo json_encode($unavailable_dates); ?>;
 
-                function validateDates() {
-                    const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
-                    const today = new Date();
+                function getDisabledDates(unavailableDates) {
+                    let disabledDates = [];
+                    unavailableDates.forEach(range => {
+                        let start = new Date(range.StartDate);
+                        let end = new Date(range.EndDate);
+                        while (start <= end) {
+                            disabledDates.push(start.toISOString().split('T')[0]);
+                            start.setDate(start.getDate() + 1);
+                        }
+                    });
+                    return disabledDates;
+                }
 
-                    if (dropoffDate < today) {
-                        alert('Drop-off date cannot be in the past.');
+                const disabledDates = getDisabledDates(unavailableDates);
+
+                flatpickr(".flatpickr", {
+                    disable: disabledDates,
+                    dateFormat: "Y-m-d",
+                    minDate: "today"
+                });
+            });
+            
+            function validateDates() {
+
+                    // Check if the date is not empty
+                    if (!document.getElementById('daycare_dropoffdate').value) {
+                        alert('Please ensure the date is selected.');
                         return false;
                     }
 

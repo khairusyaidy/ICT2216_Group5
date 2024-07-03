@@ -17,6 +17,15 @@ while ($row = $result->fetch_assoc()) {
     $pet_name[] = $row;
 }
 
+// Fetch unavailable date ranges
+$unavailable_dates = [];
+$availability_query = "SELECT StartDate, EndDate FROM availability WHERE Deleted_At IS NULL";
+$availability_result = $conn->query($availability_query);
+while ($row = $availability_result->fetch_assoc()) {
+    $unavailable_dates[] = $row;
+}
+
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['pet'], $_POST['boarding_dropoffdate'], $_POST['boarding_pickupdate'], $_POST['food'], $_POST['comments'])) {
@@ -96,6 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/book_boarding.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
 
     <body>
@@ -121,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <?php foreach ($pet_name as $pname): ?>
                     <div>
-                        <input type="radio" id="pet_<?php echo htmlspecialchars($pet['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>">
+                        <input type="radio" id="pet_<?php echo htmlspecialchars($pet['ID']); ?>" name="pet" value="<?php echo htmlspecialchars($pname['ID']); ?>" required>
                         <label for="pet_<?php echo htmlspecialchars($pet['ID']); ?>"><?php echo htmlspecialchars($pname['Name']); ?></label>
                     </div>
                 <?php endforeach; ?>
@@ -129,21 +140,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <br>
 
                 <label for="boarding_dropoffdate"><b>Drop-off Date:</b></label><br>
-                <input type="date" id="boarding_dropoffdate" name="boarding_dropoffdate">
+                <input type="date" id="boarding_dropoffdate" name="boarding_dropoffdate" class="flatpickr">
 
                 <br><br>
 
                 <label for="boarding_pickupdate"><b>Pick-up Date:</b></label><br>
-                <input type="date" id="boarding_pickupdate" name="boarding_pickupdate">
+                <input type="date" id="boarding_pickupdate" name="boarding_pickupdate" class="flatpickr">
 
                 <br><br>
 
                 <p><b>Complementary Food:</b></p>
 
-                <input type="radio" id="yes" name="food" value="Yes">
+                <input type="radio" id="yes" name="food" value="Yes" required>
                 <label for="yes">Yes</label><br>
 
-                <input type="radio" id="no" name="food" value="No">
+                <input type="radio" id="no" name="food" value="No" required>
                 <label for="no">No</label><br>
 
                 <p><b>Allergy / Comments /Remarks:</b></p>
@@ -186,23 +197,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <script src="js/main.js"></script>
 
         <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const unavailableDates = <?php echo json_encode($unavailable_dates); ?>;
+
+                    function getDisabledDates(unavailableDates) {
+                        let disabledDates = [];
+                        unavailableDates.forEach(range => {
+                            let start = new Date(range.StartDate);
+                            let end = new Date(range.EndDate);
+                            while (start <= end) {
+                                disabledDates.push(start.toISOString().split('T')[0]);
+                                start.setDate(start.getDate() + 1);
+                            }
+                        });
+                        return disabledDates;
+                    }
+
+                    const disabledDates = getDisabledDates(unavailableDates);
+
+                    flatpickr(".flatpickr", {
+                        disable: disabledDates,
+                        dateFormat: "Y-m-d",
+                        minDate: "today"
+                    });
+                });
+
                 function validateDates() {
                     const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
                     const pickupDate = new Date(document.getElementById('boarding_pickupdate').value);
-                    const today = new Date();
-
-                    if (dropoffDate < today) {
-                        alert('Drop-off date cannot be in the past.');
-                        return false;
-                    }
-
-                    if (pickupDate < today) {
-                        alert('Pick-up date cannot be in the past.');
-                        return false;
-                    }
 
                     if (pickupDate <= dropoffDate) {
                         alert('Pick-up date must be after the drop-off date.');
+                        return false;
+                    }
+
+                    // Check if both date fields are not empty
+                    if (!document.getElementById('boarding_dropoffdate').value) {
+                        alert('Please ensure both drop-off and pick-up dates are selected.');
+                        return false;
+                    }
+
+                    if (!document.getElementById('boarding_pickupdate').value) {
+                        alert('Please ensure both drop-off and pick-up dates are selected.');
                         return false;
                     }
 

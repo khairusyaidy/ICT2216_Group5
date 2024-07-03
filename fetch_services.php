@@ -44,7 +44,7 @@ if (isset($_POST['petID'])) {
     echo '<p><b>Select a service:</b></p>';
     foreach ($services as $service) {
         echo '<div>';
-        echo '<input type="radio" id="service_' . htmlspecialchars($service['ID']) . '" name="service" value="' . htmlspecialchars($service['ID']) . '" data-name="' . htmlspecialchars($service['ServiceName']) . '" data-price="' . htmlspecialchars($service['Price']) . '">';
+        echo '<input type="radio" id="service_' . htmlspecialchars($service['ID']) . '" name="service" value="' . htmlspecialchars($service['ID']) . '" data-name="' . htmlspecialchars($service['ServiceName']) . '" data-price="' . htmlspecialchars($service['Price']) . '" required>';
         echo '<label for="service_' . htmlspecialchars($service['ID']) . '">' . htmlspecialchars($service['ServiceName']) . ' - $' . htmlspecialchars($service['Price']) . '</label>';
         echo '</div>';
     }
