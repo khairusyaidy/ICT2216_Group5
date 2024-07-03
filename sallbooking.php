@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $sql_upcoming = "SELECT b.ID, b.DropOffDate, b.PickUpDate, s.ServiceName, s.Price, b.Status, c.FirstName, c.LastName 
+                                        $sql_upcoming = "SELECT b.ID, b.DropOffDate, b.PickUpDate, s.ServiceName, s.Price, b.Status, b.ServiceID, c.FirstName, c.LastName 
                                                     FROM Booking b
                                                     INNER JOIN Service s ON b.ServiceID = s.ID
                                                     INNER JOIN Customer c ON b.CustomerID = c.ID
@@ -95,36 +95,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
                                                 echo '<td>' . htmlspecialchars($row['Status']) . '</td>';
                                                 echo '<td>';
 
-                                                // Check service name to determine edit and reject links
-                                                switch ($row['ServiceName']) {
-                                                    case 'Boarding':
-                                                        echo '<a href="sboardingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary">Edit</a> ';
-                                                        echo '<form action="sboardingreject.php" method="post" style="display: inline-block;">';
-                                                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-                                                        echo '<input type="text" name="reject_reason" placeholder="Enter rejection reason" required>';
-                                                        echo '<button type="submit" class="btn btn-danger">Reject</button>';
-                                                        echo '</form>';
-                                                        break;
-                                                    case 'Daycare':
-                                                        echo '<a href="sdaycareedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary">Edit</a> ';
-                                                        echo '<form action="sdaycarereject.php" method="post" style="display: inline-block;">';
-                                                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-                                                        echo '<input type="text" name="reject_reason" placeholder="Enter rejection reason" required>';
-                                                        echo '<button type="submit" class="btn btn-danger">Reject</button>';
-                                                        echo '</form>';
-                                                        break;
-                                                    default:
-                                                        if (strpos($row['ServiceName'], 'Groom') !== false || strpos($row['ServiceName'], 'Shower') !== false) {
-                                                            echo '<a href="sgroomingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary">Edit</a> ';
-                                                            echo '<form action="sgroomingreject.php" method="post" style="display: inline-block;">';
-                                                            echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-                                                            echo '<input type="text" name="reject_reason" placeholder="Enter rejection reason" required>';
-                                                            echo '<button type="submit" class="btn btn-danger">Reject</button>';
-                                                            echo '</form>';
-                                                        } else {
-                                                            echo 'N/A';
-                                                        }
-                                                        break;
+                                                // Check service ID to determine edit and reject links
+                                                $editPage = '';
+                                                $rejectPage = '';
+                                                if ($row['ServiceID'] == 1) {
+                                                    $editPage = 'sboardingedit.php';
+                                                    $rejectPage = 'sboardingreject.php';
+                                                } elseif ($row['ServiceID'] == 2) {
+                                                    $editPage = 'sdaycareedit.php';
+                                                    $rejectPage = 'sdaycarereject.php';
+                                                } elseif ($row['ServiceID'] >= 3 && $row['ServiceID'] <= 11) {
+                                                    $editPage = 'sgroomingedit.php';
+                                                    $rejectPage = 'sgroomingreject.php';
+                                                }
+
+                                                if ($editPage && $rejectPage) {
+                                                    echo '<a href="' . $editPage . '?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit</a>';
+                                                    echo '<a href="' . $rejectPage . '?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject</a>';
+                                                } else {
+                                                    echo 'N/A';
                                                 }
 
                                                 echo '</td>';

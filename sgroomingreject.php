@@ -32,49 +32,123 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $customer_email = $row['Email'];
-            $customer_name = $row['FirstName'] . ' ' . $row['LastName'];
+            $email = $row['Email'];
+            $name = $row['FirstName'] . ' ' . $row['LastName'];
 
-            // Send email notification
             $mail = new PHPMailer(true);
 
             try {
                 // Server settings
                 $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com'; // SMTP server
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'ictssdproj@gmail.com'; // SMTP username
-                $mail->Password   = 'prlc xrsj tdib furv'; // SMTP password
+                $mail->Host = 'smtp.example.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'your_email@example.com';
+                $mail->Password = 'your_email_password';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
+                $mail->Port = 587;
 
                 // Recipients
-                $mail->setFrom('ictssdproj@gmail.com', 'Fur Hotel');
-                $mail->addAddress($customer_email, $customer_name);
+                $mail->setFrom('your_email@example.com', 'Your Company');
+                $mail->addAddress($email, $name);
 
                 // Content
-                $mail->isHTML(false);
-                $mail->Subject = 'Booking Rejection Notification';
-                $mail->Body    = "Dear $customer_name,\n\nYour booking has been rejected for the following reason:\n\n$reason\n\nPlease contact us for further assistance.";
+                $mail->isHTML(true);
+                $mail->Subject = 'Grooming Booking Rejected';
+                $mail->Body = 'Dear ' . $name . ',<br>Your grooming booking has been rejected. Reason: ' . $reason . '.<br>Thank you.';
 
                 $mail->send();
-                echo '<div class="alert alert-success">Booking rejected successfully. Email notification sent.</div>';
             } catch (Exception $e) {
-                echo '<div class="alert alert-danger">Booking rejected successfully. Failed to send email notification. Error: ' . htmlspecialchars($mail->ErrorInfo) . '</div>';
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
-        } else {
-            echo '<div class="alert alert-warning">Customer email not found. Email notification not sent.</div>';
         }
 
-        // Redirect back to the grooming details page after rejection
-        header('Location: sgroomingdetail.php');
+        // Redirect to sgroomingdetail.php with a success message
+        header("Location: sgroomingdetail.php?success=Booking rejected successfully");
         exit();
     } else {
-        echo '<div class="alert alert-danger">Failed to reject booking.</div>';
+        // Handle error
+        $error_message = "Error rejecting booking: " . $stmt->error;
     }
-} else {
-    echo '<div class="alert alert-danger">Invalid request.</div>';
+
+    $stmt->close();
+    $conn->close();
 }
 
-$conn->close();
+// Check if booking ID is set in the query string
+if (isset($_GET['id'])) {
+    $booking_id = intval($_GET['id']);
+} else {
+    // Redirect back to sgroomingdetail.php if no booking ID is provided
+    header("Location: sgroomingdetail.php");
+    exit();
+}
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include "head.inc.php"; ?>
+</head>
+<body>
+    <!-- Topbar Start -->
+    <?php include "topbar.inc.php"; ?>
+    <!-- Topbar End -->
+
+    <!-- Navbar Start -->
+    <?php include "adminnav.php"; ?>
+    <!-- Navbar End -->
+
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-3">
+            <div class="row">
+                <div class="col text-center mb-4">
+                    <h1>Reject Grooming Booking</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <?php
+                    if (isset($error_message)) {
+                        echo '<div class="alert alert-danger">' . htmlspecialchars($error_message) . '</div>';
+                    }
+                    ?>
+                    <form action="sgroomingreject.php" method="post">
+                        <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars($booking_id); ?>">
+                        <div class="form-group">
+                            <label for="reason">Reason for Rejection</label>
+                            <textarea id="reason" name="reason" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Reject Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Start -->
+    <?php include "footer.inc.php"; ?>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="lib/select2/js/select2.full.min.js"></script>
+    <script src="lib/sweetalert/sweetalert.min.js"></script>
+    <script src="lib/jquery-steps/jquery.steps.min.js"></script>
+    <script src="lib/parsleyjs/parsley.min.js"></script>
+    <script src="lib/Chart.js/Chart.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Custom JavaScript can be added here
+    </script>
+</body>
+</html>

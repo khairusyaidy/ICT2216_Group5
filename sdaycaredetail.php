@@ -83,17 +83,10 @@
                         echo '<a href="sdaycareedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
                         echo '</div>';
 
-                        // Add form for rejecting booking
-                        echo '<form action="sdaycarereject.php" method="post" class="mb-3">';
-                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                        // Properly formatted reason input box
-                        echo '<div class="form-group">';
-                        echo '<input type="text" name="reason" placeholder="Enter rejection reason" required class="form-control">';
+                        // Add a reject button that redirects to sdaycarereject.php with the booking ID
+                        echo '<div class="mb-3">';
+                        echo '<a href="sdaycarereject.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject Booking</a>';
                         echo '</div>';
-
-                        echo '<button type="submit" class="btn btn-danger">Reject Booking</button>';
-                        echo '</form>';
                     } else {
                         echo '<p class="text-danger">Booking Rejected</p>';
                     }
@@ -157,17 +150,10 @@
                         echo '<a href="sdaycareedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
                         echo '</div>';
 
-                        // Add form for rejecting booking
-                        echo '<form action="sdaycarereject.php" method="post" class="mb-3">';
-                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                        // Properly formatted reason input box
-                        echo '<div class="form-group">';
-                        echo '<input type="text" name="reason" placeholder="Enter rejection reason" required class="form-control">';
+                        // Add a reject button that redirects to sdaycarereject.php with the booking ID
+                        echo '<div class="mb-3">';
+                        echo '<a href="sdaycarereject.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject Booking</a>';
                         echo '</div>';
-
-                        echo '<button type="submit" class="btn btn-danger">Reject Booking</button>';
-                        echo '</form>';
                     } else {
                         echo '<p class="text-danger">Booking Rejected</p>';
                     }
@@ -197,23 +183,6 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="lib/select2/js/select2.full.min.js"></script>
-    <script src="lib/sweetalert/sweetalert.min.js"></script>
-    <script src="lib/jquery-steps/jquery.steps.min.js"></script>
-    <script src="lib/parsleyjs/parsley.min.js"></script>
-    <script src="lib/Chart.js/Chart.min.js"></script>
-    <script src="js/main.js"></script>
-
-    <!-- Custom JavaScript -->
-    <script>
-        // Custom JavaScript can be added here
-    </script>
+    <?php include "javascript.inc.php"; ?>
 </body>
 </html>

@@ -24,7 +24,7 @@ if (!isset($_GET['id'])) {
 
 // Fetch staff details based on ID
 $staff_id = $_GET['id'];
-$stmt = $conn->prepare("SELECT FirstName, LastName, Email, PhoneNo FROM staff WHERE ID = ?");
+$stmt = $conn->prepare("SELECT FirstName, LastName, Email, PhoneNo, Role FROM staff WHERE ID = ?");
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
 $result = $stmt->get_result();

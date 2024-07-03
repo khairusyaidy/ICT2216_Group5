@@ -81,19 +81,8 @@
                     if ($row['Status'] != 'Rejected') {
                         echo '<div class="mb-3">'; // Adding margin bottom
                         echo '<a href="sboardingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
+                        echo '<a href="sboardingreject.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject Booking</a>';
                         echo '</div>';
-
-                        // Add form for rejecting booking
-                        echo '<form action="sboardingreject.php" method="post" class="mb-3">';
-                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                        // Properly formatted reason input box
-                        echo '<div class="form-group">';
-                        echo '<input type="text" name="reason" placeholder="Enter rejection reason" required class="form-control">';
-                        echo '</div>';
-
-                        echo '<button type="submit" class="btn btn-danger">Reject Booking</button>';
-                        echo '</form>';
                     } else {
                         echo '<p class="text-danger">Booking Rejected</p>';
                     }
@@ -155,19 +144,8 @@
                     if ($row['Status'] != 'Rejected') {
                         echo '<div class="mb-3">'; // Adding margin bottom
                         echo '<a href="sboardingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
+                        echo '<a href="sboardingreject.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject Booking</a>';
                         echo '</div>';
-
-                        // Add form for rejecting booking
-                        echo '<form action="sboardingreject.php" method="post" class="mb-3">';
-                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                        // Properly formatted reason input box
-                        echo '<div class="form-group">';
-                        echo '<input type="text" name="reason" placeholder="Enter rejection reason" required class="form-control">';
-                        echo '</div>';
-
-                        echo '<button type="submit" class="btn btn-danger">Reject Booking</button>';
-                        echo '</form>';
                     } else {
                         echo '<p class="text-danger">Booking Rejected</p>';
                     }

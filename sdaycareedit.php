@@ -16,11 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     $booking_id = intval($_POST['booking_id']);
     $dropoff_date = $_POST['dropoff_date']; // Example field, adjust as per your form
     $reason = $_POST['reason']; // Reason for changing the date
-    
+
     // Update booking in database
-    $sql = "UPDATE Booking SET DropOffDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
+    $sql = "UPDATE Booking SET DropOffDate = ?, PickUpDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $dropoff_date, $reason, $booking_id);
+    $stmt->bind_param("sssi", $dropoff_date, $dropoff_date, $reason, $booking_id);
 
     if ($stmt->execute()) {
         // Booking updated successfully
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
                 // Content
                 $mail->isHTML(false);
                 $mail->Subject = 'Booking Update Notification';
-                $mail->Body = "Dear $customer_name,\n\nYour booking details have been updated.\n\nNew Drop-Off Date: $dropoff_date\nReason: $reason\n\nPlease check your account for more information.";
+                $mail->Body = "Dear $customer_name,\n\nYour booking details have been updated.\n\nNew Drop-Off Date and Pick-Up Date: $dropoff_date\nReason: $reason\n\nPlease check your account for more information.";
 
                 $mail->send();
                 echo '<div class="alert alert-success">Booking updated successfully. Email notification sent.</div>';

@@ -24,7 +24,7 @@ if (!isset($_GET['id'])) {
 
 // Fetch staff details based on ID
 $staff_id = $_GET['id'];
-$stmt = $conn->prepare("SELECT FirstName, LastName, Email, PhoneNo FROM staff WHERE ID = ?");
+$stmt = $conn->prepare("SELECT FirstName, LastName, Email, PhoneNo, Role FROM staff WHERE ID = ?");
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $phone = trim($_POST["phone"]);
     $password = trim($_POST["password"]);
+    $role = trim($_POST["role"]);
 
     // Check if password is provided to update
     if (!empty($password)) {
@@ -55,8 +56,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Update staff details in the database
-    $stmt = $conn->prepare("UPDATE staff SET FirstName=?, LastName=?, Email=?, PhoneNo=?, Password=? WHERE ID=?");
-    $stmt->bind_param("sssssi", $firstname, $lastname, $email, $phone, $hashed_password, $staff_id);
+    $stmt = $conn->prepare("UPDATE staff SET FirstName=?, LastName=?, Email=?, PhoneNo=?, Password=?, Role=? WHERE ID=?");
+    $stmt->bind_param("ssssssi", $firstname, $lastname, $email, $phone, $hashed_password, $role, $staff_id);
 
     if ($stmt->execute()) {
         // Set success message in session variable
@@ -134,6 +135,13 @@ function hashPassword($password) {
                                 <div class="form-group">
                                     <label for="phone">Phone Number</label>
                                     <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($staff['PhoneNo']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <select class="form-control" id="role" name="role" required>
+                                        <option value="staff" <?php echo ($staff['Role'] == 'staff') ? 'selected' : ''; ?>>Staff</option>
+                                        <option value="admin" <?php echo ($staff['Role'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">New Password</label>

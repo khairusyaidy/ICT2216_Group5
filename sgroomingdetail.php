@@ -126,17 +126,8 @@
                     echo '<a href="sgroomingedit.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-primary mr-2">Edit Booking</a>';
                     echo '</div>';
 
-                    // Add form for rejecting booking
-                    echo '<form action="sgroomingreject.php" method="post" class="mb-3">';
-                    echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                    // Properly formatted reason input box
-                    echo '<div class="form-group">';
-                    echo '<input type="text" name="reason" placeholder="Enter rejection reason" required class="form-control">';
-                    echo '</div>';
-
-                    echo '<button type="submit" class="btn btn-danger">Reject Booking</button>';
-                    echo '</form>';
+                    // Replace the form for rejecting booking with a redirect button
+                    echo '<a href="sgroomingreject.php?id=' . htmlspecialchars($row['ID']) . '" class="btn btn-danger">Reject Booking</a>';
                 } else {
                     echo '<p class="text-danger">Booking Rejected</p>';
                 }

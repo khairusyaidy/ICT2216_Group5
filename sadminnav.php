@@ -3,6 +3,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
 // Check if user is logged in
 $logged_in = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
 
@@ -29,9 +30,7 @@ if (isset($_POST['logout'])) {
         </button>
         <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
             <div class="navbar-nav mr-auto py-0">
-                <a href="staffhomepage.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffhomepage.php' ? 'active' : '' ?>">Home</a>
-                <a href="savailability.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'savailability.php' ? 'active' : '' ?>">Availability</a>
-                <a href="sallbooking.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'sallbooking.php' ? 'active' : '' ?>">Booking</a>
+                <a href="staffaccount.php" class="nav-item nav-link <?= basename($_SERVER['PHP_SELF']) == 'staffaccount.php' ? 'active' : '' ?>">Accounts</a>
             </div>
             <div class="navbar-nav ml-auto">
                 <form class="form-inline my-2 my-lg-0 ml-3" method="post">

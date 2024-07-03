@@ -54,7 +54,15 @@
                                     <label for="password">Password</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <select class="form-control" id="role" name="role" required>
+                                        <option value="staff">Staff</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Add Account</button>
+                                <a href="staffaccount.php" class="btn btn-secondary">Cancel</a>
                             </form>
                         </div>
                     </div>

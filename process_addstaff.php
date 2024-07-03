@@ -8,10 +8,11 @@ $lastname = $_POST['lastname'];
 $email = $_POST['email'];
 $phone = $_POST['phone'];
 $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password for security
+$role = trim($_POST["role"]);
 
 // SQL insert statement
-$stmt = $conn->prepare("INSERT INTO staff (FirstName, LastName, Email, PhoneNo, Password) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $firstname, $lastname, $email, $phone, $password);
+$stmt = $conn->prepare("INSERT INTO staff (FirstName, LastName, Email, PhoneNo, Password, Role) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssss", $firstname, $lastname, $email, $phone, $password, $role);
 
 // Execute and check for success
 if ($stmt->execute()) {

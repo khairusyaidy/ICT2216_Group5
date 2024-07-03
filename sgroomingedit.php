@@ -17,10 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     $dropoff_date = $_POST['dropoff_date']; // Example field, adjust as per your form
     $reason = $_POST['reason']; // Reason for changing the date
     
+    // Set pickup date same as dropoff date
+    $pickup_date = $dropoff_date;
+    
     // Update booking in database
-    $sql = "UPDATE Booking SET DropOffDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
+    $sql = "UPDATE Booking SET DropOffDate = ?, PickUpDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $dropoff_date, $reason, $booking_id);
+    $stmt->bind_param("sssi", $dropoff_date, $pickup_date, $reason, $booking_id);
 
     if ($stmt->execute()) {
         // Booking updated successfully
@@ -67,8 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
             echo '<div class="alert alert-warning">Customer email not found. Email notification not sent.</div>';
         }
 
-        // Redirect to sboardingdetail.php after successful update
-        header('Location: sboardingdetail.php');
+        // Redirect to sgroomingdetail.php after successful update
+        header('Location: sgroomingdetail.php');
         exit();
     } else {
         echo '<div class="alert alert-danger">Failed to update booking.</div>';
@@ -118,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
                     $row = $result->fetch_assoc();
 
                     // Display edit form
-                    echo '<form action="sboardingedit.php" method="post">';
+                    echo '<form action="sgroomingedit.php" method="post">';
                     echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
 
                     // Display fields for editing (e.g., drop-off date, remarks)
@@ -134,10 +137,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
                     echo '<input type="text" class="form-control" id="reason" name="reason" placeholder="Enter reason for changing the date" required>';
                     echo '</div>';
 
-                    // Continue with other fields as needed (e.g., pick-up date, food, remarks)
+                    // Continue with other fields as needed (e.g., food, remarks)
 
                     echo '<button type="submit" class="btn btn-primary">Update Booking</button>';
-                    echo '<a href="sboardingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
+                    echo '<a href="sgroomingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
                     echo '</form>';
                 } else {
                     echo '<div class="alert alert-warning">Booking not found.</div>';
