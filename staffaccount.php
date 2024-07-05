@@ -1,3 +1,6 @@
+<?php 
+ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +66,7 @@
                     </div>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -90,7 +93,6 @@
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>
 
@@ -101,7 +103,7 @@
 function getUsers() {
     global $errorMsg, $success; // Ensure these variables are defined if needed
     // Include your database configuration file here if not already included
-    include "db_connect.php"; // Ensure to adjust the path to your actual configuration file
+    include "dbconntest.php"; // Ensure to adjust the path to your actual configuration file
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -1,6 +1,9 @@
 <?php
+ob_start();
 // Include database connection
-include_once "db_connect.php";
+include_once "dbconntest.php";
+
+
 
 // Initialize session
 session_start();

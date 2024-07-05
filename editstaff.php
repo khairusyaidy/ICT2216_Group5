@@ -12,7 +12,7 @@ if (!$logged_in) {
 }
 
 // Include your database configuration file here if not already included
-include "db_connect.php"; // Adjust the path as per your configuration
+include "dbconntest.php"; // Adjust the path as per your configuration
 
 $errorMsg = "";
 $successMsg = "";
@@ -145,7 +145,7 @@ function hashPassword($password) {
                                 </div>
                                 <div class="form-group">
                                     <label for="password">New Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank to keep the current password">
+                                    <input type="password" class="form-control" id="password" name="password" >
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update Staff</button>
                                 <a href="staffaccount.php" class="btn btn-secondary">Cancel</a>
@@ -154,7 +154,7 @@ function hashPassword($password) {
                     </div>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -181,6 +181,5 @@ function hashPassword($password) {
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>

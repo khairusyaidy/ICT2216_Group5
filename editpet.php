@@ -1,6 +1,6 @@
 <?php
 // Include database connection script
-include "db_connect.php"; // Ensure this file initializes $mysqli correctly
+include "dbconntest.php"; // Ensure this file initializes $mysqli correctly
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect form data

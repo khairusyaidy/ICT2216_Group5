@@ -1,5 +1,5 @@
 <?php
-include "db_connect.php";
+include "dbconntest.php";
 
 // Check if user is logged in, otherwise redirect to login page
 session_start();
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $update_reason = $_POST['update_reason'];
 
     // Update query
-    $sql_update = "UPDATE Availability SET StartDate = ?, EndDate = ?,  Update_Reason = ?, Updated_At = NOW() WHERE ID = ?";
+    $sql_update = "UPDATE availability SET StartDate = ?, EndDate = ?,  Update_Reason = ?, Updated_At = NOW() WHERE ID = ?";
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->bind_param("sssi", $start_date, $end_date, $update_reason, $id);
 
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_GET['id'];
 
         // Fetch record details
-        $sql_select = "SELECT ID, StartDate, EndDate FROM Availability WHERE ID = ?";
+        $sql_select = "SELECT ID, StartDate, EndDate FROM availability WHERE ID = ?";
         $stmt_select = $conn->prepare($sql_select);
         $stmt_select->bind_param("i", $id);
         $stmt_select->execute();
@@ -108,12 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include "footer.inc.php"; ?>
     <!-- Footer End -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <?php include "scripts.inc.php"; ?>
 </body>
 </html>
 

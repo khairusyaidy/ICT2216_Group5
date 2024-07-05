@@ -1,6 +1,7 @@
 <?php
+ob_start();
 // Include database connection script
-include "db_connect.php"; // Ensure this file initializes $mysqli correctly
+include "dbconntest.php"; // Ensure this file initializes $mysqli correctly
 
 
 // Check for password change success message
@@ -257,36 +258,37 @@ function validateAge($age)
     <!-- Profile Content End -->
 
      <!-- Change Password Modal -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="changepassword.php" method="post" id="changePasswordForm">
-                        <div class="form-group">
-                            <label for="currentPassword">Current Password</label>
-                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="newPassword">New Password</label>
-                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                            <small class="text-danger" id="passwordMatchError"></small>
-                        </div>
-                        <button type="button" class="btn btn-primary" onclick="validateChangePasswordForm()">Change Password</button>
-                    </form>
-                </div>
+   <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="changepassword.php" method="post" id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                        <small class="text-danger" id="newPasswordError"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        <small class="text-danger" id="passwordMatchError"></small>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="validateChangePasswordForm()">Change Password</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
     <!-- Change Password Modal End -->
     
     
@@ -325,7 +327,12 @@ function validateAge($age)
             document.getElementById('passwordMatchError').textContent = 'Passwords do not match.';
             return false;
         }
-
+// Validate password strength
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(newPassword)) {
+        document.getElementById('passwordMatchError').textContent = 'Password must contain at least 6 characters including at least one uppercase letter, one lowercase letter, and one number.';
+        return false;
+    }
         // Create an XMLHttpRequest object
         var xhr = new XMLHttpRequest();
         var url = 'changepassword.php'; // URL of your PHP script handling the request

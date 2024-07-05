@@ -1,4 +1,5 @@
 <?php
+ob_start();
 // Start session at the beginning of the script
 session_start();
 
@@ -12,7 +13,7 @@ if (!$logged_in) {
 }
 
 // Include your database configuration file here if not already included
-include "db_connect.php"; // Adjust the path as per your configuration
+include "dbconntest.php"; // Adjust the path as per your configuration
 
 $errorMsg = "";
 $successMsg = "";
@@ -111,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_delete'])) {
                     </div>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -138,6 +139,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_delete'])) {
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>

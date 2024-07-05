@@ -1,9 +1,10 @@
 <?php
+ob_start();
 $bookingID = intval($_GET['booking_id']);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Include the database connection file
-    include 'db_connect.php';
+    include 'dbconntest.php';
     
     $bookingID = intval($_POST['booking_id']);
 

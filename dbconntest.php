@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = ""; // Replace with your actual MySQL password
-$dbname = "SSDDB"; // Replace with your actual database name
+$servername = "g5-mysql-db";
+$username = "g5dba";
+$password = "Group$2216!";
+$dbname = "g5db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -12,4 +12,5 @@ $mysqli = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
 ?>

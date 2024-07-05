@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db_connect.php';
+require_once 'dbconntest.php';
 
 // Initialize variables to store booking ID and total price
 $booking_id = null;

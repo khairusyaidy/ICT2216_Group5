@@ -1,5 +1,5 @@
 <?php
-include "db_connect.php";
+include "dbconntest.php";
 
 // Check if user is logged in, otherwise redirect to login page
 session_start();
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check input errors before inserting into database
     if (empty($start_date_err) && empty($end_date_err) && empty($reason_err)) {
         // Prepare an INSERT statement
-        $sql = "INSERT INTO Availability (StartDate, EndDate, Reason, Created_By) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO availability (StartDate, EndDate, Reason, Created_By) VALUES (?, ?, ?, ?)";
         
         if ($stmt = $conn->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
@@ -132,12 +132,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Footer Start -->
     <?php include "footer.inc.php"; ?>
     <!-- Footer End -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <?php include "scripts.inc.php"; ?>
 </body>
 </html>

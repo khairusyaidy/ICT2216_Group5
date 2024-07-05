@@ -93,18 +93,8 @@
     </div>
 
     <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "SSDDB";
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+include "dbconntest.php";
 
     $first_name = $last_name = $email = $phone = $password = $confirm_password = "";
     $first_name_err = $last_name_err = $email_err = $phone_err = $password_err = $confirm_password_err = "";

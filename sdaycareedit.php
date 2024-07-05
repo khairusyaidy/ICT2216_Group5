@@ -1,14 +1,18 @@
 <?php
+ob_start();
+date_default_timezone_set('Asia/Singapore');
+
 // Include your database configuration file here if not already included
-include "db_connect.php";
+include "dbconntest.php";
 
 // Include PHPMailer library
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'C:\xampp\PHPMailer-master\src\Exception.php';
-require 'C:\xampp\PHPMailer-master\src\PHPMailer.php';
-require 'C:\xampp\PHPMailer-master\src\SMTP.php';
+// Include PHPMailer files from the same directory
+require 'Exception.php';
+require 'PHPMailer.php';
+require 'SMTP.php';
 
 // Check if form is submitted and data is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
@@ -18,14 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     $reason = $_POST['reason']; // Reason for changing the date
 
     // Update booking in database
-    $sql = "UPDATE Booking SET DropOffDate = ?, PickUpDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
+    $sql = "UPDATE booking SET DropOffDate = ?, PickUpDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sssi", $dropoff_date, $dropoff_date, $reason, $booking_id);
 
     if ($stmt->execute()) {
         // Booking updated successfully
         // Example of sending email notification (using PHPMailer)
-        $sql = "SELECT c.Email, c.FirstName, c.LastName FROM Booking b INNER JOIN Customer c ON b.CustomerID = c.ID WHERE b.ID = ?";
+        $sql = "SELECT c.Email, c.FirstName, c.LastName FROM booking b INNER JOIN customer c ON b.CustomerID = c.ID WHERE b.ID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $booking_id);
         $stmt->execute();
@@ -108,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
                 // Sanitize and validate input
                 $booking_id = intval($_GET['id']); // Assuming integer ID
                 // Retrieve booking details from database
-                $sql = "SELECT * FROM Booking WHERE ID = ?";
+                $sql = "SELECT * FROM booking WHERE ID = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("i", $booking_id);
                 $stmt->execute();

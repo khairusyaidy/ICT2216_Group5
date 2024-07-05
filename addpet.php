@@ -3,7 +3,7 @@
 session_start();
 
 // Include database connection script
-include "db_connect.php"; // Ensure this file initializes $mysqli correctly
+include "dbconntest.php"; // Ensure this file initializes $mysqli correctly
 
 // Function to sanitize and validate input
 function sanitizeInput($input)

@@ -2,7 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'db_connect.php';
+require_once 'dbconntest.php';
 
 // Retrieve CustomerID from session
 if (!isset($_SESSION['id'])) {
@@ -29,7 +29,7 @@ while ($row = $availability_result->fetch_assoc()) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['pet'], $_POST['daycare_dropoffdate'], $_POST['food'], $_POST['comments'])) {
         // Re-establish the connection
-        require_once 'db_connect.php';
+        require_once 'dbconntest.php';
 
         // Get the form data
         $pet_id = $_POST['pet'];

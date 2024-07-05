@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,13 +50,13 @@
                                     <tbody>
                                         <?php
                                         // Include your database configuration file here if not already included
-                                        include "db_connect.php";
+                                        include "dbconntest.php";
 
                                         // Fetch current bookings and their services for today
                                         $sql = "SELECT b.ID, b.DropOffDate, b.PickUpDate, s.ServiceName, s.Price, b.Status, c.FirstName, c.LastName 
-                                                FROM Booking b
-                                                INNER JOIN Service s ON b.ServiceID = s.ID
-                                                INNER JOIN Customer c ON b.CustomerID = c.ID
+                                                FROM booking b
+                                                INNER JOIN service s ON b.ServiceID = s.ID
+                                                INNER JOIN customer c ON b.CustomerID = c.ID
                                                 WHERE DATE(b.DropOffDate) = CURDATE()"; // Change condition as per your requirement
 
                                         $result = $conn->query($sql);
@@ -85,7 +86,7 @@
                     </div>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -112,6 +113,5 @@
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
-include "db_connect.php";
+ob_start();
+include "dbconntest.php";
 
 // Check if user is logged in, otherwise redirect to login page
 session_start();
@@ -59,7 +60,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <tbody>
                             <?php
                             $sql = "SELECT ID, StartDate, EndDate, Reason, Created_By, Updated_At, Update_Reason 
-                                    FROM Availability
+                                    FROM availability
                                     WHERE Deleted_At IS NULL";
 
                             $result = $conn->query($sql);
@@ -114,7 +115,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <tbody>
                             <?php
                             $sql = "SELECT ID, StartDate, EndDate, Reason, Created_By, Updated_At, Update_Reason, Deleted_At, Deleted_Reason 
-                                    FROM Availability
+                                    FROM availability
                                     WHERE Deleted_At IS NOT NULL";
 
                             $result = $conn->query($sql);
@@ -148,12 +149,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <?php include "footer.inc.php"; ?>
     <!-- Footer End -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
 
-    <?php include "scripts.inc.php"; ?>
 </body>
 </html>
 

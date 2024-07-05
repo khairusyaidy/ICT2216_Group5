@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +23,7 @@
 
             <?php
             // Include your database configuration file here if not already included
-            include "db_connect.php";
+            include "dbconntest.php";
 
             // Create connection
             $conn = new mysqli($servername, $username, $password, $dbname);
@@ -40,9 +41,9 @@
 
             // Query to fetch grooming bookings for today
             $sqlToday = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, s.ServiceName, p.Name AS PetName
-                FROM Booking b
-                JOIN Service s ON b.ServiceID = s.ID
-                JOIN Pet p ON b.PetID = p.ID
+                FROM booking b
+                JOIN service s ON b.ServiceID = s.ID
+                JOIN pet p ON b.PetID = p.ID
                 WHERE s.ID BETWEEN 3 AND 11
                 AND DATE(b.DropOffDate) = '$today'";
 
@@ -68,9 +69,9 @@
 
             // Query to fetch upcoming grooming bookings
             $sqlUpcoming = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, s.ServiceName, p.Name AS PetName
-                FROM Booking b
-                JOIN Service s ON b.ServiceID = s.ID
-                JOIN Pet p ON b.PetID = p.ID
+                FROM booking b
+                JOIN service s ON b.ServiceID = s.ID
+                JOIN pet p ON b.PetID = p.ID
                 WHERE s.ID BETWEEN 3 AND 11
                 AND DATE(b.DropOffDate) > '$today'
                 ORDER BY b.DropOffDate ASC";

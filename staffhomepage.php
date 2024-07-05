@@ -1,3 +1,6 @@
+<?php ob_start();
+date_default_timezone_set('Asia/Singapore');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,19 +41,9 @@
     </style>
 
     <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "SSDDB";
+    include "dbconntest.php";
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
+    $today = date('Y-m-d');
     // Initialize counts
     $boardingCount = 0;
     $daycareCount = 0;
@@ -58,11 +51,16 @@
     $totalCount = 0;
 
     // Fetch service counts
-    $sql = "SELECT s.ID, s.ServiceName, COUNT(b.ID) as Count 
-            FROM Service s 
-            LEFT JOIN Booking b ON s.ID = b.ServiceID AND DATE(b.DropOffDate) = CURDATE() 
-            GROUP BY s.ID, s.ServiceName";
-    $result = $conn->query($sql);
+    $sql = "SELECT s.ID, s.ServiceName, COUNT(b.ID) as Count
+        FROM service s
+        LEFT JOIN booking b ON s.ID = b.ServiceID
+        WHERE b.DropOffDate = ?
+        GROUP BY s.ID, s.ServiceName";
+
+    $stmt_tdatebooking = $conn->prepare($sql);
+    $stmt_tdatebooking->bind_param("s", $today);
+    $stmt_tdatebooking->execute();
+    $result = $stmt_tdatebooking->get_result();
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -114,7 +112,7 @@
                     </a>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -141,6 +139,5 @@
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>

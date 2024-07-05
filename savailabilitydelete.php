@@ -1,5 +1,5 @@
 <?php
-include "db_connect.php";
+include "dbconntest.php";
 
 // Check if user is logged in, otherwise redirect to login page
 session_start();
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $deleted_reason = $_POST['deleted_reason'];
 
     // Update query
-    $sql_update = "UPDATE Availability SET Deleted_At = NOW(), Deleted_Reason = ? WHERE ID = ?";
+    $sql_update = "UPDATE availability SET Deleted_At = NOW(), Deleted_Reason = ? WHERE ID = ?";
     $stmt_update = $conn->prepare($sql_update);
     $stmt_update->bind_param("si", $deleted_reason, $id);
 
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id = $_GET['id'];
 
         // Fetch record details to display on delete form
-        $sql_select = "SELECT ID, StartDate, EndDate, Reason FROM Availability WHERE ID = ?";
+        $sql_select = "SELECT ID, StartDate, EndDate, Reason FROM availability WHERE ID = ?";
         $stmt_select = $conn->prepare($sql_select);
         $stmt_select->bind_param("i", $id);
         $stmt_select->execute();
@@ -113,12 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include "footer.inc.php"; ?>
     <!-- Footer End -->
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <?php include "scripts.inc.php"; ?>
 </body>
 </html>
 

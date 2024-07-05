@@ -2,7 +2,7 @@
 session_start();
 
 // Include database connection script
-include "db_connect.php";
+include "dbconntest.php";
 
 // Function to sanitize and validate input
 function sanitizeInput($input) {

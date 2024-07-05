@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +23,7 @@
 
             <?php
             // Include your database configuration file here if not already included
-            include "db_connect.php";
+            include "dbconntest.php";
 
             // Create connection
             $conn = new mysqli($servername, $username, $password, $dbname);
@@ -40,9 +41,9 @@
 
             // Query to fetch daycare bookings for today
             $sqlToday = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, p.Name AS PetName, c.FirstName, c.LastName
-                FROM Booking b
-                JOIN Pet p ON b.PetID = p.ID
-                JOIN Customer c ON b.CustomerID = c.ID
+                FROM booking b
+                JOIN pet p ON b.PetID = p.ID
+                JOIN customer c ON b.CustomerID = c.ID
                 WHERE b.ServiceID = 2
                 AND DATE(b.DropOffDate) = '$today'";
 
@@ -106,9 +107,9 @@
 
             // Query to fetch upcoming daycare bookings
             $sqlUpcoming = "SELECT b.ID, b.DropOffDate, b.PickUpDate, b.Food, b.Remarks, b.TotalPrice, b.Paid, b.Status, b.Reason, p.Name AS PetName, c.FirstName, c.LastName
-                FROM Booking b
-                JOIN Pet p ON b.PetID = p.ID
-                JOIN Customer c ON b.CustomerID = c.ID
+                FROM booking b
+                JOIN pet p ON b.PetID = p.ID
+                JOIN customer c ON b.CustomerID = c.ID
                 WHERE b.ServiceID = 2
                 AND DATE(b.DropOffDate) > '$today'
                 ORDER BY b.DropOffDate ASC";
@@ -183,6 +184,5 @@
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <?php include "javascript.inc.php"; ?>
 </body>
 </html>

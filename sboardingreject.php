@@ -1,15 +1,18 @@
 <?php
+ob_start();
+date_default_timezone_set('Asia/Singapore');
+
 // Include your database configuration file here if not already included
-include "db_connect.php";
+include "dbconntest.php";
 
 // Include PHPMailer library
-require 'C:\xampp\PHPMailer-master\src\Exception.php';
-require 'C:\xampp\PHPMailer-master\src\PHPMailer.php';
-require 'C:\xampp\PHPMailer-master\src\SMTP.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-use PHPMailer\PHPMailer\Exception as PHPMailerException;
-use PHPMailer\PHPMailer\PHPMailer as PHPMailer;
-use PHPMailer\PHPMailer\SMTP as PHPMailerSMTP;
+// Include PHPMailer files from the same directory
+require 'Exception.php';
+require 'PHPMailer.php';
+require 'SMTP.php';
 
 // Check if booking ID is provided via GET method
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
@@ -74,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
 
     // Update booking status and reason in the database
     $status = "Rejected";
-    $sql = "UPDATE Booking SET Status = ?, Reason = ? WHERE ID = ?";
+    $sql = "UPDATE booking SET Status = ?, Reason = ? WHERE ID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssi", $status, $reason, $booking_id);
 
@@ -82,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
         // Booking rejected successfully
         // Send email notification (using PHPMailer)
 
-        $sql = "SELECT c.Email, c.FirstName, c.LastName FROM Booking b INNER JOIN Customer c ON b.CustomerID = c.ID WHERE b.ID = ?";
+        $sql = "SELECT c.Email, c.FirstName, c.LastName FROM booking b INNER JOIN customer c ON b.CustomerID = c.ID WHERE b.ID = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $booking_id);
         $stmt->execute();

@@ -1,3 +1,7 @@
+<?php
+ob_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,7 +72,7 @@
                     </div>
                 </div>
             </main>
-
+   </section>
             <!-- Footer Start -->
             <?php include "footer.inc.php"; ?>
             <!-- Footer End -->
@@ -95,6 +99,5 @@
                 // Custom JavaScript can be added here
             </script>
         </div>
-    </section>
 </body>
 </html>

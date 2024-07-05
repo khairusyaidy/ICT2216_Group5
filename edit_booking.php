@@ -2,7 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'db_connect.php';
+require_once 'dbconntest.php';
 
 // Check if booking_id is provided in the URL
 if (!isset($_GET['booking_id'])) {
@@ -16,6 +16,14 @@ if (!isset($_SESSION['id'])) {
     die("Customer ID not found in session.");
 }
 $customerID = $_SESSION['id'];
+
+// Fetch unavailable date ranges
+$unavailable_dates = [];
+$availability_query = "SELECT StartDate, EndDate FROM availability WHERE Deleted_At IS NULL";
+$availability_result = $conn->query($availability_query);
+while ($row = $availability_result->fetch_assoc()) {
+    $unavailable_dates[] = $row;
+}
 
 // Fetch booking details for the specific booking_id and customerID
 $sql = "SELECT b.*, s.ServiceName FROM booking b JOIN service s ON b.ServiceID = s.ID WHERE b.ID = '$booking_id' AND b.CustomerID = '$customerID'";
@@ -60,6 +68,8 @@ $conn->close();
     <head>
         <?php include "head.inc.php"; ?>
         <link rel="stylesheet" href="css/edit_booking.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     </head>
     <body>
         <?php include "topbar.inc.php"; ?>
@@ -69,14 +79,14 @@ $conn->close();
             <h2>Edit Booking</h2>
             <div class="row" id="edit_container">
                 <div class="col-md-6">
-                    <form method="post" action="">
+                    <form method="post" action="" onsubmit="return validateDates()">
                         <div class="form-group">
                             <label for="boarding_dropoffdate">Drop-off Date:</label>
-                            <input type="date" id="boarding_dropoffdate" name="boarding_dropoffdate" value="<?php echo htmlspecialchars($booking['DropOffDate']); ?>" required>
+                            <input type="date" id="boarding_dropoffdate" name="boarding_dropoffdate" class="flatpickr" value="<?php echo htmlspecialchars($booking['DropOffDate']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="boarding_pickupdate">Pick-up Date:</label>
-                            <input type="date" id="boarding_pickupdate" name="boarding_pickupdate" value="<?php echo htmlspecialchars($booking['PickUpDate']); ?>" required>
+                            <input type="date" id="boarding_pickupdate" name="boarding_pickupdate" class="flatpickr" value="<?php echo htmlspecialchars($booking['PickUpDate']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label>Complementary Food:</label><br>
@@ -108,5 +118,57 @@ $conn->close();
         <script src="mail/jqBootstrapValidation.min.js"></script>
         <script src="mail/contact.js"></script>
         <script src="js/main.js"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const unavailableDates = <?php echo json_encode($unavailable_dates); ?>;
+
+                function getDisabledDates(unavailableDates) {
+                    let disabledDates = [];
+                    unavailableDates.forEach(range => {
+                        let start = new Date(range.StartDate);
+                        let end = new Date(range.EndDate);
+                        while (start <= end) {
+                            disabledDates.push(start.toISOString().split('T')[0]);
+                            start.setDate(start.getDate() + 1);
+                        }
+                    });
+                    return disabledDates;
+                }
+
+                const disabledDates = getDisabledDates(unavailableDates);
+
+                flatpickr(".flatpickr", {
+                    disable: disabledDates,
+                    dateFormat: "Y-m-d",
+                    minDate: "today"
+                });
+            });
+
+            function validateDates() {
+                const dropoffDate = new Date(document.getElementById('boarding_dropoffdate').value);
+                const pickupDate = new Date(document.getElementById('boarding_pickupdate').value);
+
+                if (pickupDate <= dropoffDate) {
+                    alert('Pick-up date must be after the drop-off date.');
+                    return false;
+                }
+
+                // Check if both date fields are not empty
+                if (!document.getElementById('boarding_dropoffdate').value) {
+                    alert('Please ensure both drop-off and pick-up dates are selected.');
+                    return false;
+                }
+
+                if (!document.getElementById('boarding_pickupdate').value) {
+                    alert('Please ensure both drop-off and pick-up dates are selected.');
+                    return false;
+                }
+
+                return true;
+            }
+
+        </script>
     </body>
 </html>

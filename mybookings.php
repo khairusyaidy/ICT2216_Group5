@@ -1,11 +1,12 @@
 <?php
+ob_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel') {
 // Ensure session is started
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
 
-    require_once 'db_connect.php';
+    require_once 'dbconntest.php';
 
 // Retrieve CustomerID from session
     if (!isset($_SESSION['id'])) {
@@ -72,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'db_connect.php';
+require_once 'dbconntest.php';
 
 // Retrieve CustomerID from session
 if (!isset($_SESSION['id'])) {
@@ -135,7 +136,7 @@ $conn->close();
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo htmlspecialchars($booking['ServiceName']); ?></h5>
                                     <p class="card-text"><b>Pet Name:</b> <?php echo htmlspecialchars($booking['PetName']); ?></p>
-                                    <p class="card-text"><b>Pet Weight:</b> <?php echo htmlspecialchars($booking['PetWeight']); ?> kg</p>
+                                    <p class="card-text"><b>Pet Weight:</b> <?php echo htmlspecialchars($booking['PetWeight']); ?></p>
                                     <p class="card-text"><b>Drop-off Date:</b> <?php echo htmlspecialchars($booking['DropOffDate']); ?></p>
                                     <p class="card-text"><b>Pick-up Date:</b> <?php echo htmlspecialchars($booking['PickUpDate']); ?></p>
                                     <p class="card-text"><b>Food:</b> <?php echo $booking['Food'] ? 'Yes' : 'No'; ?></p>

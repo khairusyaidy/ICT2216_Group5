@@ -1,6 +1,6 @@
 <?php
 // Include your database configuration file here
-include "db_connect.php"; // Adjust path as necessary
+include "dbconntest.php"; // Adjust path as necessary
 
 // Retrieve form data
 $firstname = $_POST['firstname'];

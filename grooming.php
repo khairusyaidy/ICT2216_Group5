@@ -1,3 +1,4 @@
+<?php ob_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,7 +194,7 @@
         <div class="owl-carousel testimonial-carousel">
             <?php
             // Include the database connection file
-            include 'db_connect.php';
+            include 'dbconntest.php';
 
             // Query to fetch reviews and service names where ServiceID is 3, 4, 5, 6, 7, 8, 9, 10, 11
             $sql = "SELECT review.Rating, review.Feedback, review.ServiceID 
