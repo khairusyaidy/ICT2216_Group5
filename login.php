@@ -3,8 +3,6 @@ ob_start();
 // Include database connection
 include_once "dbconntest.php";
 
-
-
 // Initialize session
 session_start();
 
@@ -36,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // If no errors, proceed with authentication
     if (empty($email_err) && empty($password_err)) {
         // Attempt to authenticate as customer
-        $sql_customer = "SELECT id, FirstName, LastName, Password FROM customer WHERE Email = ?";
+        $sql_customer = "SELECT id, FirstName, LastName, Password, GoogleAuthenticatorSecret FROM customer WHERE Email = ?";
         if ($stmt_customer = $conn->prepare($sql_customer)) {
             $stmt_customer->bind_param("s", $param_email);
             $param_email = $email;
@@ -48,21 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if email exists for customer
                 if ($stmt_customer->num_rows == 1) {
                     // Bind result variables
-                    $stmt_customer->bind_result($id, $FirstName, $LastName, $hashed_password);
+                    $stmt_customer->bind_result($id, $FirstName, $LastName, $hashed_password, $google_secret);
                     if ($stmt_customer->fetch()) {
                         // Verify password
                         if (password_verify($password, $hashed_password)) {
-                            // Password is correct, start a new session for customer
-                            session_start();
+                            // Password is correct, proceed with 2FA
+                            $_SESSION['temp_id'] = $id;
+                            $_SESSION['temp_first_name'] = $FirstName;
+                            $_SESSION['temp_last_name'] = $LastName;
+                            $_SESSION['google_secret'] = $google_secret;
 
-                            // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["FirstName"] = $FirstName;
-                            $_SESSION["LastName"] = $LastName;
-
-                            // Redirect customer to index page
-                            header("location: index.php");
+                            header("Location: 2fa_verify.php");
                             exit;
                         } else {
                             // Set a generic error message
@@ -82,59 +76,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "Oops! Something went wrong. Please try again later.";
         }
-        
- // Attempt to authenticate as staff
-$sql_staff = "SELECT id, FirstName, LastName, Password, Role FROM staff WHERE Email = ?";
-if ($stmt_staff = $conn->prepare($sql_staff)) {
-    $stmt_staff->bind_param("s", $param_email);
-    $param_email = $email;
 
-    // Attempt to execute the prepared statement
-    if ($stmt_staff->execute()) {
-        $stmt_staff->store_result();
+        // Attempt to authenticate as staff
+        $sql_staff = "SELECT id, FirstName, LastName, Password, Role FROM staff WHERE Email = ?";
+        if ($stmt_staff = $conn->prepare($sql_staff)) {
+            $stmt_staff->bind_param("s", $param_email);
+            $param_email = $email;
 
-        // Check if email exists for staff
-        if ($stmt_staff->num_rows == 1) {
-            // Bind result variables
-            $stmt_staff->bind_result($id, $FirstName, $LastName, $hashed_password, $role);
-            if ($stmt_staff->fetch()) {
-                // Verify password
-                if (password_verify($password, $hashed_password)) {
-                    // Password is correct, start a new session for staff
-                    session_start();
+            // Attempt to execute the prepared statement
+            if ($stmt_staff->execute()) {
+                $stmt_staff->store_result();
 
-                    // Store data in session variables
-                    $_SESSION["loggedin"] = true;
-                    $_SESSION["id"] = $id;
-                    $_SESSION["FirstName"] = $FirstName;
-                    $_SESSION["LastName"] = $LastName;
-                    $_SESSION["Role"] = $role; // Store role in session
+                // Check if email exists for staff
+                if ($stmt_staff->num_rows == 1) {
+                    // Bind result variables
+                    $stmt_staff->bind_result($id, $FirstName, $LastName, $hashed_password, $role);
+                    if ($stmt_staff->fetch()) {
+                        // Verify password
+                        if (password_verify($password, $hashed_password)) {
+                            // Password is correct, start a new session for staff
+                            session_start();
 
-                    // Redirect based on role
-                    if ($role == 'admin') {
-                        header("location: staffaccount.php");
-                    } else {
-                        header("location: staffhomepage.php");
+                            // Store data in session variables
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["id"] = $id;
+                            $_SESSION["FirstName"] = $FirstName;
+                            $_SESSION["LastName"] = $LastName;
+                            $_SESSION["Role"] = $role; // Store role in session
+
+                            // Redirect based on role
+                            if ($role == 'admin') {
+                                header("location: staffaccount.php");
+                            } else {
+                                header("location: staffhomepage.php");
+                            }
+                            exit;
+                        } else {
+                            // Set a generic error message
+                            $login_err = "Invalid email/password entered.";
+                        }
                     }
-                    exit;
                 } else {
                     // Set a generic error message
                     $login_err = "Invalid email/password entered.";
                 }
+            } else {
+                echo "Oops! Something went wrong. Please try again later.";
             }
-        } else {
-            // Set a generic error message
-            $login_err = "Invalid email/password entered.";
-        }
-    } else {
-        echo "Oops! Something went wrong. Please try again later.";
-    }
 
-    // Close statement
-    $stmt_staff->close();
-} else {
-    echo "Oops! Something went wrong. Please try again later.";
-}
+            // Close statement
+            $stmt_staff->close();
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
     }
 
     // Close connection
