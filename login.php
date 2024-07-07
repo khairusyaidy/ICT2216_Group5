@@ -244,7 +244,7 @@ if ($stmt_staff = $conn->prepare($sql_staff)) {
 
             <div class="buttons">
                 <button type="submit">Log In</button>
-                <a href="forgot_password.html">Forgot Password?</a>
+                <a href="forgot_password.php">Forgot Password?</a>
             </div>
 
             <div class="signup-link">
