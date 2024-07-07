@@ -91,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
             width: 50%; /* Adjust as needed for the smaller size */
         }
     </style>
+    <script src="js/inactivity.js"></script>
 </head>
 <body>
     <!-- Topbar Start -->

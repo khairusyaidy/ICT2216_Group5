@@ -98,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <link rel="stylesheet" href="css/book_daycare.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="js/inactivity.js"></script>
     </head>
 
     <body>
@@ -135,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <br><br>
 
-                <p><b>Complementary Food:</b></p>
+                <p><b>Complimentary Food:</b></p>
 
                 <input type="radio" id="yes" name="food" value="Yes" required>
                 <label for="yes">Yes</label><br>

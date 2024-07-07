@@ -35,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
 <html lang="en">
     <head>
         <?php include "head.inc.php"; ?>
+        <script src="js/inactivity.js"></script>
     </head>
     <body>
         <!-- Topbar Start -->

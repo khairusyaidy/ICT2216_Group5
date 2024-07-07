@@ -5,6 +5,7 @@ date_default_timezone_set('Asia/Singapore');
 <html lang="en">
 <head>
     <?php include "head.inc.php"; ?>
+    <script src="js/inactivity.js"></script>
 </head>
 <body>
     <!-- Topbar Start -->

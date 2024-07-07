@@ -59,6 +59,7 @@ $conn->close();
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/summary.css">
+        <script src="js/inactivity.js"></script>
     </head>
 
     <body>

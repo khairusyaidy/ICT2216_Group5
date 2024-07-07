@@ -36,6 +36,7 @@ function validateAge($age)
 
 <head>
     <?php include "head.inc.php"; ?>
+    <script src="js/inactivity.js"></script>
 </head>
 
 <body>

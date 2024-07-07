@@ -70,6 +70,7 @@ $conn->close();
         <link rel="stylesheet" href="css/edit_booking.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="js/inactivity.js"></script>
     </head>
     <body>
         <?php include "topbar.inc.php"; ?>
@@ -89,7 +90,7 @@ $conn->close();
                             <input type="date" id="boarding_pickupdate" name="boarding_pickupdate" class="flatpickr" value="<?php echo htmlspecialchars($booking['PickUpDate']); ?>" required>
                         </div>
                         <div class="form-group">
-                            <label>Complementary Food:</label><br>
+                            <label>Complimentary Food:</label><br>
                             <input type="radio" id="yes" name="food" value="Yes" <?php if ($booking['Food'] == 1) echo 'checked'; ?>>
                             <label for="yes">Yes</label><br>
                             <input type="radio" id="no" name="food" value="No" <?php if ($booking['Food'] == 0) echo 'checked'; ?>>

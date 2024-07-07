@@ -113,6 +113,7 @@ $conn->close();
     <head>
         <?php include "head.inc.php"; ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1R4Kmve1gKv9VObNUz3cvhPOeVr5J4kNIPN7A0JQquz7m0Y4rJ/9iiWE6Us52frG4Vap5lKfYiz/+O5Bl1bMOw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="js/inactivity.js"></script>
     </head>
     <body>
         <!--Topbar Start-->

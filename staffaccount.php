@@ -5,6 +5,7 @@ ob_start();
 <html lang="en">
 <head>
     <?php include "head.inc.php"; ?>
+    <script src="js/inactivity.js"></script>
 </head>
 <body>
     <!-- Topbar Start -->

@@ -68,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 50px auto;
         }
     </style>
+    <script src="js/inactivity.js"></script>
 </head>
 <body>
     <!-- Topbar Start -->

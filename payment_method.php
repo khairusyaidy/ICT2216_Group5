@@ -7,6 +7,7 @@
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/payment.css">
+        <script src="js/inactivity.js"></script>
     </head>
 
     <body>

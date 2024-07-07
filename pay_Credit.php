@@ -39,6 +39,7 @@ $conn->close();
         include "head.inc.php";
         ?>
         <link rel="stylesheet" href="css/credit.css">
+        <script src="js/inactivity.js"></script>
     </head>
 
     <body>

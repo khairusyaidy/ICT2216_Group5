@@ -24,6 +24,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             margin-bottom: 0;
         }
     </style>
+    <script src="js/inactivity.js"></script>
 </head>
 <body>
     <!-- Topbar Start -->
