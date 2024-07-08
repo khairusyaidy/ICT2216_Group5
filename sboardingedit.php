@@ -14,6 +14,12 @@ require 'Exception.php';
 require 'PHPMailer.php';
 require 'SMTP.php';
 
+// Check if the user has the 'staff' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+    header("location: unauthorized.php");
+    exit;
+}
+
 // Check if form is submitted and data is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     // Sanitize and validate input
@@ -21,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     $dropoff_date = $_POST['dropoff_date']; // Example field, adjust as per your form
     $pickup_date = $_POST['pickup_date']; // Example field, adjust as per your form
     $reason = $_POST['reason']; // Reason for changing dates
-    
     // Update booking in database
     $sql = "UPDATE booking SET DropOffDate = ?, PickUpDate = ?, Reason = ?, Status = 'Updated' WHERE ID = ?";
     $stmt = $conn->prepare($sql);
@@ -82,111 +87,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <?php include "head.inc.php"; ?>
-    <style>
-        .form-control-small {
-            width: 50%; /* Adjust as needed for the smaller size */
-        }
-    </style>
-    <script src="js/inactivity.js"></script>
-</head>
-<body>
-    <!-- Topbar Start -->
-    <?php include "topbar.inc.php"; ?>
-    <!-- Topbar End -->
-
-    <!-- Navbar Start -->
-    <?php include "adminnav.php"; ?>
-    <!-- Navbar End -->
-
-    <section class="py-5">
-        <div class="container px-4 px-lg-5 mt-3">
-            <div class="row">
-                <div class="col">
-                    <h1>Edit Boarding Booking</h1>
-                </div>
-            </div>
-
-            <?php
-            // Retrieve booking details from database if editing
-            if (isset($_GET['id'])) {
-                // Sanitize and validate input
-                $booking_id = intval($_GET['id']); // Assuming integer ID
-                // Retrieve booking details from database
-                $sql = "SELECT * FROM booking WHERE ID = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $booking_id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
-
-                    // Display edit form
-                    echo '<form action="sboardingedit.php" method="post">';
-                    echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
-
-                    // Display fields for editing
-                    // Example: Drop-Off Date
-                    echo '<div class="form-group">';
-                    echo '<label for="dropoff_date">Drop-Off Date:</label>';
-                    echo '<input type="date" class="form-control form-control-small" id="dropoff_date" name="dropoff_date" value="' . htmlspecialchars($row['DropOffDate']) . '" required>';
-                    echo '</div>';
-
-                    // Example: Pick-Up Date
-                    echo '<div class="form-group">';
-                    echo '<label for="pickup_date">Pick-Up Date:</label>';
-                    echo '<input type="date" class="form-control form-control-small" id="pickup_date" name="pickup_date" value="' . htmlspecialchars($row['PickUpDate']) . '" required>';
-                    echo '</div>';
-
-                    // Add reason for changing the dates
-                    echo '<div class="form-group">';
-                    echo '<label for="reason">Reason:</label>';
-                    echo '<input type="text" class="form-control" id="reason" name="reason" placeholder="Enter reason for changing the dates" required>';
-                    echo '</div>';
-
-                    // Continue with other fields as needed (e.g., food, remarks)
-
-                    echo '<button type="submit" class="btn btn-primary">Update Booking</button>';
-                    echo '<a href="sboardingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
-                    echo '</form>';
-                } else {
-                    echo '<div class="alert alert-warning">Booking not found.</div>';
-                }
-            } else {
-                echo '<div class="alert alert-danger">Booking ID not provided.</div>';
+    <head>
+        <?php include "head.inc.php"; ?>
+        <style>
+            .form-control-small {
+                width: 50%; /* Adjust as needed for the smaller size */
             }
+        </style>
+        <script src="js/inactivity.js"></script>
+    </head>
+    <body>
+        <!-- Topbar Start -->
+        <?php include "topbar.inc.php"; ?>
+        <!-- Topbar End -->
 
-            $conn->close();
-            ?>
-        </div>
-    </section>
+        <!-- Navbar Start -->
+        <?php include "adminnav.php"; ?>
+        <!-- Navbar End -->
 
-    <!-- Footer Start -->
-    <?php include "footer.inc.php"; ?>
-    <!-- Footer End -->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-3">
+                <div class="row">
+                    <div class="col">
+                        <h1>Edit Boarding Booking</h1>
+                    </div>
+                </div>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+                <?php
+                // Retrieve booking details from database if editing
+                if (isset($_GET['id'])) {
+                    // Sanitize and validate input
+                    $booking_id = intval($_GET['id']); // Assuming integer ID
+                    // Retrieve booking details from database
+                    $sql = "SELECT * FROM booking WHERE ID = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $booking_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="lib/select2/js/select2.full.min.js"></script>
-    <script src="lib/sweetalert/sweetalert.min.js"></script>
-    <script src="lib/jquery-steps/jquery.steps.min.js"></script>
-    <script src="lib/parsleyjs/parsley.min.js"></script>
-    <script src="lib/Chart.js/Chart.min.js"></script>
-    <script src="js/main.js"></script>
+                    if ($result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
 
-    <!-- Custom JavaScript -->
-    <script>
-        // Custom JavaScript can be added here
-    </script>
-</body>
+                        // Display edit form
+                        echo '<form action="sboardingedit.php" method="post">';
+                        echo '<input type="hidden" name="booking_id" value="' . htmlspecialchars($row['ID']) . '">';
+
+                        // Display fields for editing
+                        // Example: Drop-Off Date
+                        echo '<div class="form-group">';
+                        echo '<label for="dropoff_date">Drop-Off Date:</label>';
+                        echo '<input type="date" class="form-control form-control-small" id="dropoff_date" name="dropoff_date" value="' . htmlspecialchars($row['DropOffDate']) . '" required>';
+                        echo '</div>';
+
+                        // Example: Pick-Up Date
+                        echo '<div class="form-group">';
+                        echo '<label for="pickup_date">Pick-Up Date:</label>';
+                        echo '<input type="date" class="form-control form-control-small" id="pickup_date" name="pickup_date" value="' . htmlspecialchars($row['PickUpDate']) . '" required>';
+                        echo '</div>';
+
+                        // Add reason for changing the dates
+                        echo '<div class="form-group">';
+                        echo '<label for="reason">Reason:</label>';
+                        echo '<input type="text" class="form-control" id="reason" name="reason" placeholder="Enter reason for changing the dates" required>';
+                        echo '</div>';
+
+                        // Continue with other fields as needed (e.g., food, remarks)
+
+                        echo '<button type="submit" class="btn btn-primary">Update Booking</button>';
+                        echo '<a href="sboardingdetail.php" class="btn btn-secondary ml-2">Cancel</a>';
+                        echo '</form>';
+                    } else {
+                        echo '<div class="alert alert-warning">Booking not found.</div>';
+                    }
+                } else {
+                    echo '<div class="alert alert-danger">Booking ID not provided.</div>';
+                }
+
+                $conn->close();
+                ?>
+            </div>
+        </section>
+
+        <!-- Footer Start -->
+        <?php include "footer.inc.php"; ?>
+        <!-- Footer End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="lib/tempusdominus/js/moment.min.js"></script>
+        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <script src="lib/select2/js/select2.full.min.js"></script>
+        <script src="lib/sweetalert/sweetalert.min.js"></script>
+        <script src="lib/jquery-steps/jquery.steps.min.js"></script>
+        <script src="lib/parsleyjs/parsley.min.js"></script>
+        <script src="lib/Chart.js/Chart.min.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Custom JavaScript -->
+        <script>
+            // Custom JavaScript can be added here
+        </script>
+    </body>
 </html>

@@ -14,6 +14,12 @@ require 'Exception.php';
 require 'PHPMailer.php';
 require 'SMTP.php';
 
+// Check if the user has the 'staff' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+    header("location: unauthorized.php");
+    exit;
+}
+
 // Check if form is submitted and data is valid
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id'])) {
     // Sanitize and validate input

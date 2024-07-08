@@ -8,6 +8,12 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     exit;
 }
 
+// Check if the user has the 'staff' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+    header("location: unauthorized.php");
+    exit;
+}
+
 // Initialize variables for form validation
 $start_date = $end_date = $reason = "";
 $start_date_err = $end_date_err = $reason_err = "";

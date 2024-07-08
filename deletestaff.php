@@ -18,6 +18,12 @@ include "dbconntest.php"; // Adjust the path as per your configuration
 $errorMsg = "";
 $successMsg = "";
 
+// Check if the user has the 'staff' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+    header("location: unauthorized.php");
+    exit;
+}
+
 // Check if ID is provided in the URL
 if (!isset($_GET['id'])) {
     die("No staff ID selected.");

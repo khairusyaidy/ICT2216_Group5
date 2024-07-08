@@ -4,6 +4,18 @@ session_start();
 include "dbconntest.php"; // Ensure this file correctly establishes $conn
 date_default_timezone_set('Asia/Singapore');
 
+// Check if the user is logged in
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("location: login.php");
+    exit;
+}
+
+// Check if the user has the 'staff' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+    header("location: unauthorized.php");
+    exit;
+}
+
 // Check for POST request to handle booking rejection
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset($_POST['reject_reason'])) {
     // Sanitize and validate input
@@ -201,23 +213,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_id']) && isset
                         </div>
                     </div>
                 </main>
-   </section>
-                <?php include "footer.inc.php"; ?>
+        </section>
+        <?php include "footer.inc.php"; ?>
 
-                <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+        <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-                <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-                <script src="lib/easing/easing.min.js"></script>
-                <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-                <script src="lib/tempusdominus/js/moment.min.js"></script>
-                <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-                <script src="lib/select2/js/select2.full.min.js"></script>
-                <script src="lib/sweetalert/sweetalert.min.js"></script>
-                <script src="lib/jquery-steps/jquery.steps.min.js"></script>
-                <script src="lib/parsleyjs/parsley.min.js"></script>
-                <script src="lib/Chart.js/Chart.min.js"></script>
-                <script src="js/main.js"></script>
-            </div>
-    </body>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="lib/tempusdominus/js/moment.min.js"></script>
+        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+        <script src="lib/select2/js/select2.full.min.js"></script>
+        <script src="lib/sweetalert/sweetalert.min.js"></script>
+        <script src="lib/jquery-steps/jquery.steps.min.js"></script>
+        <script src="lib/parsleyjs/parsley.min.js"></script>
+        <script src="lib/Chart.js/Chart.min.js"></script>
+        <script src="js/main.js"></script>
+    </div>
+</body>
 </html>
