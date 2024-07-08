@@ -1,46 +1,22 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('Checkout SCM') {
       steps {
-        echo 'Building...'
+        git '/home/JenkinsDependencyCheckTest'
       }
     }
 
-    stage('OWASP Dependency-Check Vulnerabilities') {
+    stage('OWASP DependencyCheck') {
       steps {
-        script {
-          dependencyCheck additionalArguments: '''
--o './'
--s './'
--f 'ALL'
---prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
-
-          // Publish the report
-          dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-        }
-
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        echo 'Deploying...'
+        dependencyCheck(additionalArguments: '--format HTML --format XML', odcInstallation: 'Default')
       }
     }
 
   }
   post {
-    always {
-      echo 'This will always run regardless of the build status.'
-    }
-
     success {
-      echo 'Build was successful!'
-    }
-
-    failure {
-      echo 'Build failed!'
+      dependencyCheckPublisher(pattern: 'dependency-check-report.xml')
     }
 
   }
