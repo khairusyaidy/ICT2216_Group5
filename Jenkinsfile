@@ -3,13 +3,13 @@ pipeline {
   stages {
     stage('Checkout SCM') {
       steps {
-        git '/home/JenkinsDependencyCheckTest'
+        git(url: 'https://github.com/muhdmarhakim/ICT2216_Group5.git', branch: 'main')
       }
     }
 
     stage('OWASP DependencyCheck') {
       steps {
-        dependencyCheck(additionalArguments: '--format HTML --format XML', odcInstallation: 'Default')
+        dependencyCheck(additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency-Check Vulnerabilities')
       }
     }
 
