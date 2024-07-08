@@ -24,6 +24,7 @@ if (isset($_POST['logout'])) {
         <a href="" class="navbar-brand d-block d-lg-none">
         </a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <h1 class="m-0 display-5 text-capitalize font-italic text-white"><span class="text-primary">FurSeason</h1>
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
