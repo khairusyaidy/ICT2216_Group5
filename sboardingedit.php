@@ -1,5 +1,6 @@
 <?php
 ob_start();
+session_start();
 date_default_timezone_set('Asia/Singapore');
 
 // Include your database configuration file here if not already included

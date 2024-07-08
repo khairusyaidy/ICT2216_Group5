@@ -152,7 +152,7 @@ function hashPassword($password) {
                                 </div>
                                 <div class="form-group">
                                     <label for="password">New Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" >
+                                    <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update Staff</button>
                                 <a href="staffaccount.php" class="btn btn-secondary">Cancel</a>

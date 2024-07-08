@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["LastName"] = $LastName;
                             $_SESSION["Role"] = $role;
 
-                            if ($role == 'admin') {
+                            if ($_SESSION["Role"] == 'admin') {
                                 header("location: staffaccount.php");
                             } else {
                                 header("location: staffhomepage.php");
