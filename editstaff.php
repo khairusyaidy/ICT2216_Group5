@@ -17,8 +17,8 @@ include "dbconntest.php"; // Adjust the path as per your configuration
 $errorMsg = "";
 $successMsg = "";
 
-// Check if the user has the 'staff' role
-if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+// Check if the user has the 'admin' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'admin') {
     header("location: unauthorized.php");
     exit;
 }
@@ -97,7 +97,7 @@ function hashPassword($password) {
     <!-- Topbar End -->
 
     <!-- Navbar Start -->
-    <?php include "adminnav.php"; ?>
+    <?php include "sadminnav.php"; ?>
     <!-- Navbar End -->
 
     <style>
