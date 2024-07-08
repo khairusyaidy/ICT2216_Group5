@@ -13,7 +13,7 @@ $auth_code = "";
 $auth_code_err = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_SESSION['otp_attempts']) && $_SESSION['otp_attempts'] >= 3) {
+    if (isset($_SESSION['otp_attempts']) && $_SESSION['otp_attempts'] >= 2) {
         $_SESSION['otp_attempts'] = 0;  // Reset the attempts
         echo '<script>alert("Invalid authentication code. Redirecting to login page."); window.location.href = "login.php";</script>';
         exit;
