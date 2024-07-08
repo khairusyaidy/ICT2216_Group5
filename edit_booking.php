@@ -4,6 +4,12 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once 'dbconntest.php';
 
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
 // Check if booking_id is provided in the URL
 if (!isset($_GET['booking_id'])) {
     die("Booking ID not provided.");

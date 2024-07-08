@@ -2,6 +2,12 @@
 session_start();
 require_once 'dbconntest.php';
 
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
 // Initialize variables to store booking ID and total price
 $booking_id = null;
 $total_price = null;

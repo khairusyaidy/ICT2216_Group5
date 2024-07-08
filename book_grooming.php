@@ -4,6 +4,12 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 require_once 'dbconntest.php';
 
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
 // Retrieve CustomerID from session
 if (!isset($_SESSION['id'])) {
     // Handle case where customer ID is not set in session

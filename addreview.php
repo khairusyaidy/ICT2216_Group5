@@ -1,5 +1,13 @@
 <?php
 ob_start();
+session_start();
+
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
 $bookingID = intval($_GET['booking_id']);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

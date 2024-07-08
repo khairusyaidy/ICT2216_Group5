@@ -40,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION['temp_last_name'] = $LastName;
                             $_SESSION['google_secret'] = $google_secret;
                             $_SESSION['otp_attempts'] = 0;
+                            $_SESSION['Role'] = 'customer';
 
                             header("Location: 2fa_verify.php");
                             exit;

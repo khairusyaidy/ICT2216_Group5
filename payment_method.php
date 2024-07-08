@@ -1,4 +1,15 @@
-<?php ob_start(); ?>
+<?php 
+
+ob_start(); 
+session_start();
+
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

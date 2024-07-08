@@ -1,5 +1,12 @@
 <?php
 ob_start();
+session_start();
+// Check if the user has the 'customer' role
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'customer') {
+    header("location: unauthorized_adminstaff.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel') {
 // Ensure session is started
     if (session_status() == PHP_SESSION_NONE) {
