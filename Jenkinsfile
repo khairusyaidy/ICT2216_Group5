@@ -1,23 +1,27 @@
 pipeline {
-  agent any
-  stages {
-    stage('Checkout SCM') {
-      steps {
-        git(url: 'https://github.com/muhdmarhakim/ICT2216_Group5.git', branch: 'main')
-      }
-    }
+    agent any
 
-    stage('OWASP DependencyCheck') {
-      steps {
-        dependencyCheck(additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency-Check Vulnerabilities')
-      }
-    }
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git(url: 'https://github.com/muhdmarhakim/ICT2216_Group5.git', branch: 'main')
+            }
+        }
 
-  }
-  post {
-    success {
-      dependencyCheckPublisher(pattern: 'dependency-check-report.xml')
-    }
+        stage('OWASP DependencyCheck') {
+            steps {
+              dependencyCheck(additionalArguments: '--format HTML --format XML', odcInstallation: 'OWASP Dependency-Check Vulnerabilities')
+            }
+        }
 
-  }
+        stage('Composer Install and Test') {
+            agent {
+                docker { image 'composer:latest' }
+            }
+            steps {
+                sh 'composer install'
+                sh './vendor/bin/phpunit tests'
+            }
+        }
+    }
 }
