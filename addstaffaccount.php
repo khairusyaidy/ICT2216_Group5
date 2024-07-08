@@ -2,7 +2,7 @@
 ob_start();
 
 // Check if the user has the 'staff' role
-if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'admin') {
     header("location: unauthorized.php");
     exit;
 }
@@ -20,7 +20,7 @@ if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
     <!-- Topbar End -->
 
     <!-- Navbar Start -->
-    <?php include "adminnav.php"; ?>
+    <?php include "sadminnav.php"; ?>
     <!-- Navbar End -->
 
     <style>

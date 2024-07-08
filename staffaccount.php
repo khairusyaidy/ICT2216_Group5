@@ -2,7 +2,7 @@
 ob_start();
 
 // Check if the user has the 'staff' role
-if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'staff') {
+if (!isset($_SESSION["Role"]) || $_SESSION["Role"] !== 'admin') {
     header("location: unauthorized.php");
     exit;
 }
