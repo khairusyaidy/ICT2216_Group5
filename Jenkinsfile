@@ -1,6 +1,5 @@
 pipeline {
   agent any
-
   stages {
     stage('Checkout SCM') {
       steps {
@@ -19,19 +18,19 @@ pipeline {
         docker {
           image 'composer:latest'
         }
+
       }
       steps {
         sh 'composer install'
-        sh 'mkdir -p logs' // Ensure logs directory exists
+        sh 'mkdir -p logs'
         sh './vendor/bin/phpunit --log-junit logs/unitreport.xml -c tests/phpunit.xml tests'
       }
     }
-  }
 
+  }
   post {
     always {
       script {
-        // Check if the test result file exists before archiving
         def resultFile = 'logs/unitreport.xml'
         if (fileExists(resultFile)) {
           junit resultFile
@@ -39,11 +38,11 @@ pipeline {
           echo "Test results not found in ${resultFile}"
         }
       }
+
     }
+
     failure {
-      // Print the contents of the logs directory for debugging
       sh 'ls -l logs'
-      // Print the contents of the PHPUnit log file if it exists
       script {
         def resultFile = 'logs/unitreport.xml'
         if (fileExists(resultFile)) {
@@ -52,6 +51,8 @@ pipeline {
           echo "Test results not found in ${resultFile}"
         }
       }
+
     }
+
   }
 }
